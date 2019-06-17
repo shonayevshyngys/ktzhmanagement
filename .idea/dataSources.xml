@@ -7,13 +7,13 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/carsviewer</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="test@localhost" uuid="268629b2-7104-4b24-aae0-b3c05e32c167">
+    <data-source source="LOCAL" name="test@localhost [2]" uuid="0748a72c-ff26-4451-8fb2-76b8d38b2134">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/test</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="test@localhost [2]" uuid="0748a72c-ff26-4451-8fb2-76b8d38b2134">
+    <data-source source="LOCAL" name="test@localhost" uuid="268629b2-7104-4b24-aae0-b3c05e32c167">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
