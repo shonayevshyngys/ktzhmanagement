@@ -9,6 +9,10 @@ public class WagonCache {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch =  FetchType.EAGER, mappedBy = "wagonCacheId", optional = false)
+    @JoinColumn(name = "vagon_id")
+    private VagonInfo vagon_id;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "wagonCacheId")
     private List<Position> positions;
 
@@ -16,4 +20,6 @@ public class WagonCache {
     @JoinColumn(name = "user_wagon_id")
     private UserWagon userWagonId;
 
+    public WagonCache() {
+    }
 }

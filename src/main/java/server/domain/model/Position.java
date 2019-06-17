@@ -2,7 +2,6 @@ package server.domain.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity(name = "positions")
 public class Position {
@@ -14,7 +13,6 @@ public class Position {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wagon_cache_id")
     private WagonCache wagonCacheId;
-
 
 
     @Column
