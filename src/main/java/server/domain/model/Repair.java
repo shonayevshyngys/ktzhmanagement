@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.util.Calendar;
 
 @Entity(name = "Repairs")
-public class Repair {
+public class
+Repair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -109,8 +110,12 @@ public class Repair {
     private long upgrades;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vagon_id")
-    private VagonInfo vagonId;
+    @JoinColumn(name = "wagonId")
+    private WagonCache wagonId;
+
+    public Repair() {
+    }
+
 
     public long getId() {
         return id;
@@ -380,18 +385,15 @@ public class Repair {
         return upgrades;
     }
 
+    public WagonCache getWagonId() {
+        return wagonId;
+    }
+
+    public void setWagonId(WagonCache wagonId) {
+        this.wagonId = wagonId;
+    }
+
     public void setUpgrades(long upgrades) {
         this.upgrades = upgrades;
-    }
-
-    public VagonInfo getVagonId() {
-        return vagonId;
-    }
-
-    public void setVagonId(VagonInfo vagonId) {
-        this.vagonId = vagonId;
-    }
-
-    public Repair() {
     }
 }

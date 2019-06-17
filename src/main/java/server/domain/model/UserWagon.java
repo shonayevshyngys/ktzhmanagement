@@ -19,4 +19,6 @@ public class UserWagon {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wagon_cahce_id")
     private WagonCache wagonCacheId;
+
+
 }
