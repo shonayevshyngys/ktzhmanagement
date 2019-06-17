@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@Entity(name = "users")
+@Entity(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,14 +40,13 @@ public class User {
 
     }
 
-    public User(LocalDate createdAt, LocalDate lastLoginTime, String token, String username, String password, String role, List<UserAction> userActionList) {
+    public User(LocalDate createdAt, LocalDate lastLoginTime, String token, String username, String password, String role) {
         this.createdAt = createdAt;
         this.lastLoginTime = lastLoginTime;
         this.token = token;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.userActionList = userActionList;
     }
 
 

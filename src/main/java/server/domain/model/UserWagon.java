@@ -13,6 +13,10 @@ public class UserWagon {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "user_wagon")
-    private String userWagon;
+    @Column(name = "client_id")
+    private String clientId;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "wagon_cahce_id")
+    private WagonCache wagonCacheId;
 }

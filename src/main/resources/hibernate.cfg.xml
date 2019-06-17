@@ -7,12 +7,16 @@
         <property name="connection.url">jdbc:postgresql://localhost:5432/test</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">postgres</property>
-        <property name="connection.password">nikitaLOHped1k</property>
+        <property name="connection.password">asdfghjkl;'</property>
         <property name="connection.pool_size">10</property>
         <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">create</property>
-       <!-- DB schema will be updated if needed -->
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
-
+        <mapping class="server.domain.model.User"/>
+        <mapping class="server.domain.model.Position"/>
+        <mapping class="server.domain.model.UserAction"/>
+        <mapping class="server.domain.model.UserWagon"/>
+        <mapping class="server.domain.model.WagonCache"/>
     </session-factory>
 </hibernate-configuration>
