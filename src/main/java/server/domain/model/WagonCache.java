@@ -10,9 +10,12 @@ public class WagonCache {
     private long id;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "wagonCacheId")
     private List<Position> positions;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "wagonCacheId", optional = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId", optional = false)
     @JoinColumn(name = "user_wagon_id")
     private UserWagon userWagonId;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId", optional = false)
+    @JoinColumn(name = "vagon_id")
+    private VagonInfo vagonInfo;
 
     public WagonCache() {
     }
