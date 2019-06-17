@@ -31,7 +31,7 @@ public class JWThandler {
 
         generator = (user, alg) -> {
             JWTCreator.Builder token = JWT.create()
-                    .withExpiresAt(new Date(System.currentTimeMillis() + (5 * 60 * 1000)))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + (100 * 60 * 1000)))
                     .withClaim("role",user.getRole())
                     .withClaim("username", user.getUsername());  //add anything you need
             return token.sign(alg);

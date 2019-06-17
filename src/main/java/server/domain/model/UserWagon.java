@@ -15,4 +15,37 @@ public class UserWagon {
 
     @Column(name = "user_wagon")
     private String userWagon;
+
+
+    public UserWagon() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUserWagon() {
+        return userWagon;
+    }
+
+    public void setUserWagon(String userWagon) {
+        this.userWagon = userWagon;
+    }
+
+    public UserWagon(User user, String userWagon) {
+        this.user = user;
+        this.userWagon = userWagon;
+    }
 }
