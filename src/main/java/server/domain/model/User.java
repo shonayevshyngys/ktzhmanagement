@@ -13,9 +13,11 @@ public class User {
     private long id;
 
     @Column(name = "create_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(name = "last_login_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
 
     @Column(name = "token")

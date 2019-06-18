@@ -14,6 +14,7 @@ public class UserAction {
     private String action;
 
     @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column (name = "ip_address")

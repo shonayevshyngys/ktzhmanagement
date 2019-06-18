@@ -20,6 +20,7 @@ public class WagonCache {
     private UserWagon userWagonId;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdatedAt;
 
     @Column
@@ -53,8 +54,9 @@ public class WagonCache {
     @Column
     private double to_longitude;
     @Column
-    private Calendar send_date;
+    private String send_date;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date send_date_time;
     @Column
     private long send_date_timestamp;
@@ -63,8 +65,10 @@ public class WagonCache {
     @Column
     private long departure_date_error;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date time_added;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date arrive_date;
     @Column
     private String processed;
@@ -87,8 +91,10 @@ public class WagonCache {
     @Column
     private Calendar eta;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date arrive_date_real;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date arrive_date_real_timestamp;
     @Column
     private long vagon_spec_no;
@@ -141,35 +147,43 @@ public class WagonCache {
     @Column
     private long vagon_spec_obsolete_year;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_registration_date;
     @Column
     private String vagon_spec_registration_name;
     @Column
     private long vagon_spec_next_repair_type;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_next_repair_date;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_date_last_dep_repair;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_date_last_kap_repair;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_max_service_date;
     @Column
     private long vagon_spec_mileage_current;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_mileage_current_date;
     @Column
     private long vagon_spec_mileage_left;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_mileage_left_date;
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_build_date;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "wagonId")
     private List<Repair> repairs;
 
 
-    public WagonCache(List<Position> positions, UserWagon userWagonId, Date lastUpdatedAt, long vagon_no, String client_id, String from_name, long from_code, long from_road_code, String from_road_name, double from_latitude, double from_longitude, String to_name, long to_code, long user_to_code, long to_road_code, double to_road_name, double to_latitude, double to_longitude, Calendar send_date, Date send_date_time, long send_date_timestamp, long departure_timestamp, long departure_date_error, Date time_added, Date arrive_date, String processed, long groud_id, String group_name, String arrived, String round_vagon, long arrive_by_destination, double days_wo_movement, double days_wo_operation, String vagon_comment, Calendar eta, Date arrive_date_real, Date arrive_date_real_timestamp, long vagon_spec_no, double vagon_spec_tare, long vagon_spec_capacity, long vagon_spec_type, String vagon_spec_desc, long vagon_spec_common_type_code, long vagon_spec_common_type_name, String vagon_spec_model, long vagon_spec_model_no, String vagon_spec_model_cypher, long vagon_spec_model_kind, long vagon_spec_model_charact, long vagon_spec_uch_specializ, long vagon_spec_material_body, long vagon_spec_carriage_works, long vagon_spec_carrying_capacity, double vagon_spec_tare_min, double vagon_spec_tare_max, long vagon_spec_autocoupl_len, long vagon_spec_vagon_axis, double vagon_spec_axial_load, long vagon_spec_adapter_plate, double vagon_spec_body_space, long vagon_spec_delivery_year, long vagon_spec_obsolete_year, Date vagon_spec_registration_date, String vagon_spec_registration_name, long vagon_spec_next_repair_type, Date vagon_spec_next_repair_date, Date vagon_spec_date_last_dep_repair, Date vagon_spec_date_last_kap_repair, Date vagon_spec_max_service_date, long vagon_spec_mileage_current, Date vagon_spec_mileage_current_date, long vagon_spec_mileage_left, Date vagon_spec_mileage_left_date, Date vagon_spec_build_date, List<Repair> repairs) {
+    public WagonCache(List<Position> positions, UserWagon userWagonId, Date lastUpdatedAt, long vagon_no, String client_id, String from_name, long from_code, long from_road_code, String from_road_name, double from_latitude, double from_longitude, String to_name, long to_code, long user_to_code, long to_road_code, double to_road_name, double to_latitude, double to_longitude, String send_date, Date send_date_time, long send_date_timestamp, long departure_timestamp, long departure_date_error, Date time_added, Date arrive_date, String processed, long groud_id, String group_name, String arrived, String round_vagon, long arrive_by_destination, double days_wo_movement, double days_wo_operation, String vagon_comment, Calendar eta, Date arrive_date_real, Date arrive_date_real_timestamp, long vagon_spec_no, double vagon_spec_tare, long vagon_spec_capacity, long vagon_spec_type, String vagon_spec_desc, long vagon_spec_common_type_code, long vagon_spec_common_type_name, String vagon_spec_model, long vagon_spec_model_no, String vagon_spec_model_cypher, long vagon_spec_model_kind, long vagon_spec_model_charact, long vagon_spec_uch_specializ, long vagon_spec_material_body, long vagon_spec_carriage_works, long vagon_spec_carrying_capacity, double vagon_spec_tare_min, double vagon_spec_tare_max, long vagon_spec_autocoupl_len, long vagon_spec_vagon_axis, double vagon_spec_axial_load, long vagon_spec_adapter_plate, double vagon_spec_body_space, long vagon_spec_delivery_year, long vagon_spec_obsolete_year, Date vagon_spec_registration_date, String vagon_spec_registration_name, long vagon_spec_next_repair_type, Date vagon_spec_next_repair_date, Date vagon_spec_date_last_dep_repair, Date vagon_spec_date_last_kap_repair, Date vagon_spec_max_service_date, long vagon_spec_mileage_current, Date vagon_spec_mileage_current_date, long vagon_spec_mileage_left, Date vagon_spec_mileage_left_date, Date vagon_spec_build_date, List<Repair> repairs) {
         this.positions = positions;
         this.userWagonId = userWagonId;
         this.lastUpdatedAt = lastUpdatedAt;
@@ -403,11 +417,11 @@ public class WagonCache {
         this.to_longitude = to_longitude;
     }
 
-    public Calendar getSend_date() {
+    public String getSend_date() {
         return send_date;
     }
 
-    public void setSend_date(Calendar send_date) {
+    public void setSend_date(String send_date) {
         this.send_date = send_date;
     }
 
