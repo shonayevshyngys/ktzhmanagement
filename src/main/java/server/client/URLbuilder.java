@@ -52,17 +52,17 @@ public class URLbuilder {
             return this;
         }
 
-        public Builder addWagonNo(int s) {
+        public Builder addWagonNo(String s) {
             URLbuilder.this.wagonNo = "&vagon_no=" + s;
             return this;
         }
 
-        public Builder addFrom(int s) {
+        public Builder addFrom(String s) {
             URLbuilder.this.from = "&from=" + s;
             return this;
         }
 
-        public Builder addTo(int s) {
+        public Builder addTo(String s) {
             URLbuilder.this.to = "&to=" + s;
             return this;
         }

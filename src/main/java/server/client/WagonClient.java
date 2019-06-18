@@ -28,8 +28,8 @@ public class WagonClient {
         api = rf.create(WagonAPI.class);
     }
 
-    public static Single<ResponseBody> addWagon(int wagonNo,
-                                                int from, int to, String sendDay, boolean roundWagon,
+    public static Single<ResponseBody> addWagon(String wagonNo,
+                                                String from, String to, String sendDay, boolean roundWagon,
                                                 String clientId, String takeOffDay) {
         String url = URLbuilder.newBuilder()
                 .addRequestType("add_vagon")
@@ -45,7 +45,7 @@ public class WagonClient {
         return api.getWagon(url);
     }
 
-    public static Single<ResponseBody> getWagon(int wagonNo) {
+    public static Single<ResponseBody> getWagon(String wagonNo) {
         String url = URLbuilder.newBuilder()
                 .addRequestType("get_vagon")
                 .addWagonNo(wagonNo)
