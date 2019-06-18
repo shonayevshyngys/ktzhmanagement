@@ -36,10 +36,7 @@ public class App {
             crud("/wagon/:id", new WagonController(), new HashSet<>(Arrays.asList(Roles.USER)));
             app.post("/login", new LoginHandler(), Collections.singleton(Roles.ANYONE));
             app.patch("/updateAllUserWagons", new AllUserWagonsHandler(), Collections.singleton(Roles.USER));
-            app.get("/userInfo", context -> {
-                context.status(200);
-                context.json("this is info"); //TODO implement UserInfo response + billing
-            },Collections.singleton(Roles.USER) );
+            app.get("/userInfo",new UserInfoHandler(), Collections.singleton(Roles.USER) );
 
 
             //admin

@@ -12,7 +12,7 @@ public class WagonCache {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "wagonCacheId")
     private List<Position> positions;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId", optional = false)
@@ -179,7 +179,7 @@ public class WagonCache {
     @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_build_date;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "wagonId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "wagonId")
     private List<Repair> repairs;
 
 

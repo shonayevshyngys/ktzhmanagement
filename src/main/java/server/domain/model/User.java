@@ -32,15 +32,16 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userId")
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userId")
     private List<UserAction> userActionList;
 
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<UserWagon> userWagons;
 
     public User() {
 
     }
+
 
     public User(Date createdAt, Date lastLoginTime, String token, String username, String password, String role) {
         this.createdAt = createdAt;
@@ -51,6 +52,14 @@ public class User {
         this.role = role;
     }
 
+
+    public List<UserWagon> getUserWagons() {
+        return userWagons;
+    }
+
+    public void setUserWagons(List<UserWagon> userWagons) {
+        this.userWagons = userWagons;
+    }
 
     public long getId() {
         return id;
