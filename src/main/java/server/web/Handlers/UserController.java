@@ -62,6 +62,7 @@ public class UserController implements CrudHandler {
         UpdateUser updateUser = context.bodyAsClass(UpdateUser.class);
         long id = Long.valueOf(s);
         User user = UserDAO.getById(id);
+        //add check for id
         if (!updateUser.getUsername().isEmpty() && !updateUser.getUsername().equals("")){
             user.setUsername(updateUser.getUsername());
         }
