@@ -1,6 +1,7 @@
 package server.domain.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,10 @@ public class WagonCache {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId", optional = false)
     @JoinColumn(name = "user_wagon_id")
     private UserWagon userWagonId;
+
+    @Column
+    private LocalDate lastUpdatedAr;
+
     @Column
     private long vagon_no;
     @Column
@@ -164,6 +169,14 @@ public class WagonCache {
     private List<Repair> repairs;
 
     public WagonCache() {
+    }
+
+    public LocalDate getLastUpdatedAr() {
+        return lastUpdatedAr;
+    }
+
+    public void setLastUpdatedAr(LocalDate lastUpdatedAr) {
+        this.lastUpdatedAr = lastUpdatedAr;
     }
 
     public long getId() {
