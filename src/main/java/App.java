@@ -1,5 +1,6 @@
 import io.javalin.Handler;
 import io.javalin.Javalin;
+import server.client.WagonClient;
 import server.domain.HibernateUtils;
 import server.web.Handlers.*;
 import server.web.JWT.JavalinJWT;
@@ -19,6 +20,9 @@ public class App {
 
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
         app.start(1200);
+
+        //init client
+        WagonClient wc = new WagonClient();
 
         HibernateUtils.getSession();
         //jwt decoder

@@ -44,34 +44,6 @@ public class LoginHandler implements Handler {
             context.json(new ErrorResponse("bad credentials"));
             session.close();
         }
-
-        }
     }
+}
 
-//    @Override
-//    public void handle(@NotNull Context context) throws Exception {
-//        Credentials cr = context.bodyAsClass(Credentials.class);
-//        //test, clean up
-//        Session session = HibernateUtils.getSession();
-//        Transaction tr = session.beginTransaction();
-//        String username = cr.getUsername();
-//        String hql = "FROM server.domain.model.User s where s.username = :username";
-//
-//        User user = UserDAO.getByUsername(cr.getUsername());
-//        //check for null
-//        if (HashUtils.checkPassword(cr.getPassword(), user.getPassword())){
-//            String token = TokenHandler.jhandler.getProvider().generateToken(user);
-//            context.status(200);
-//            context.json(new JwtResponse(token));
-//            tr.commit();
-//            session.close();
-//            UniversalDAO.persist(new UserAction("logged in", LocalDate.now(), context.ip(), context.userAgent(), user));
-//        }
-//        else {
-//            context.status(401);
-//            context.json(new ErrorResponse("bad credentials"));
-//            session.close();
-//        }
-//
-//        }
-//    }
