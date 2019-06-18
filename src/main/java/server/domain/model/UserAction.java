@@ -14,7 +14,7 @@ public class UserAction {
     private String action;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Date createdAt;
 
     @Column (name = "ip_address")
     private String ipAddress;
@@ -30,7 +30,7 @@ public class UserAction {
     public UserAction() {
     }
 
-    public UserAction(String action, LocalDate createdAt, String ipAddress, String userAgent, User userId) {
+    public UserAction(String action, Date createdAt, String ipAddress, String userAgent, User userId) {
         this.action = action;
         this.createdAt = createdAt;
         this.ipAddress = ipAddress;
@@ -54,11 +54,11 @@ public class UserAction {
         this.action = action;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 

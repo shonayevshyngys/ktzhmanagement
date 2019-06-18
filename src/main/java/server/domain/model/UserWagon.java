@@ -3,6 +3,7 @@ package server.domain.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity(name = "user_wagons")
 public class UserWagon {
@@ -31,7 +32,7 @@ public class UserWagon {
         this.wagonCacheId = wagonCacheId;
     }
     public UserWagon(String user) {
-        this.user = new User(LocalDate.now(), LocalDate.now(), "", user, "pass", "user");
+        this.user = new User(new Date(),new Date(), "", user, "pass", "user");
         this.clientId = user;
         this.wagonCacheId = new WagonCache();
     }

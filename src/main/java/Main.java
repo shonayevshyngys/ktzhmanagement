@@ -17,8 +17,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        WagonCache wagonCache = new WagonCache(new);
-        WagonCacheDAO.persist(wagonCache);
+       // WagonCache wagonCache = new WagonCache(new);
+        //WagonCacheDAO.persist(wagonCache);
 
         //UserWagon userWagon = new UserWagon(UserDAO.getById(1),"Aman", WagonCacheDAO.getById());
 

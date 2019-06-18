@@ -11,9 +11,9 @@
         <property name="connection.pool_size">10</property>
         <property name="hibernate.show_sql">true</property>
         <!-- DB schema will be updated if needed -->
-<!--        <property name="hbm2ddl.auto">auto</property>-->
+        <property name="hbm2ddl.auto">auto</property>
         <mapping class="server.domain.model.User"/>
-        <mapping class="server.domain.model.Position"/>
+<!--        <mapping class="server.domain.model.Position"/>-->
         <mapping class="server.domain.model.UserAction"/>
         <mapping class="server.domain.model.UserWagon"/>
         <mapping class="server.domain.model.WagonCache"/>

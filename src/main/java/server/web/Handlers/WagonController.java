@@ -3,6 +3,7 @@ package server.web.Handlers;
 import io.javalin.Context;
 import io.javalin.apibuilder.CrudHandler;
 import org.jetbrains.annotations.NotNull;
+import server.client.WagonClient;
 import server.web.Utils.TokenHandler;
 import server.web.Utils.UserData;
 
@@ -13,6 +14,7 @@ public class WagonController implements CrudHandler {
     public void create(@NotNull Context context) {
         UserData userData = new UserData(context);
         //add wagon
+        //WagonClient.addWagon()
     }
 
     @Override

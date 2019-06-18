@@ -2,6 +2,7 @@ package server.domain.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity(name = "positions")
 public class Position {
@@ -22,7 +23,7 @@ public class Position {
     @Column
     private long utc_timestamp;
     @Column
-    private LocalDate utc_datetime;
+    private Date utc_datetime;
     @Column
     private String current_position;
     @Column
@@ -113,7 +114,7 @@ public class Position {
     @Column
     private String additional;
     @Column
-    private LocalDate update_time;
+    private Date update_time;
     @Column
     private String nomer_nakladnoi;
     @Column
@@ -131,7 +132,7 @@ public class Position {
     @Column
     private String broken;
     @Column
-    private LocalDate send_date_railway;
+    private Date send_date_railway;
     @Column
     private double trade_union_duration;
     @Column
@@ -153,7 +154,7 @@ public class Position {
     @Column
     private long to_station_country_code_iso;
     @Column
-    private LocalDate waybill_send_date;
+    private Date waybill_send_date;
 
 
 }

@@ -2,10 +2,10 @@ package server.domain.model;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 
 @Entity(name = "Repairs")
-public class
-Repair {
+public class Repair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -86,13 +86,13 @@ Repair {
     private long repair_end_station_country_code_iso;
 
     @Column
-    private Calendar repair_call_datetime;
+    private String repair_call_datetime;
 
     @Column
-    private Calendar repair_start_datetime;
+    private String repair_start_datetime;
 
     @Column
-    private Calendar repair_end_datetime;
+    private String repair_end_datetime;
 
     @Column
     private long broken;
@@ -325,27 +325,27 @@ Repair {
         this.repair_end_station_country_code_iso = repair_end_station_country_code_iso;
     }
 
-    public Calendar getRepair_call_datetime() {
+    public String getRepair_call_datetime() {
         return repair_call_datetime;
     }
 
-    public void setRepair_call_datetime(Calendar repair_call_datetime) {
+    public void setRepair_call_datetime(String repair_call_datetime) {
         this.repair_call_datetime = repair_call_datetime;
     }
 
-    public Calendar getRepair_start_datetime() {
+    public String getRepair_start_datetime() {
         return repair_start_datetime;
     }
 
-    public void setRepair_start_datetime(Calendar repair_start_datetime) {
+    public void setRepair_start_datetime(String repair_start_datetime) {
         this.repair_start_datetime = repair_start_datetime;
     }
 
-    public Calendar getRepair_end_datetime() {
+    public String getRepair_end_datetime() {
         return repair_end_datetime;
     }
 
-    public void setRepair_end_datetime(Calendar repair_end_datetime) {
+    public void setRepair_end_datetime(String repair_end_datetime) {
         this.repair_end_datetime = repair_end_datetime;
     }
 

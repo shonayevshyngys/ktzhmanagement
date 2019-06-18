@@ -13,10 +13,10 @@ public class User {
     private long id;
 
     @Column(name = "create_at")
-    private LocalDate createdAt;
+    private Date createdAt;
 
     @Column(name = "last_login_time")
-    private LocalDate lastLoginTime;
+    private Date lastLoginTime;
 
     @Column(name = "token")
     private String token;
@@ -40,7 +40,7 @@ public class User {
 
     }
 
-    public User(LocalDate createdAt, LocalDate lastLoginTime, String token, String username, String password, String role) {
+    public User(Date createdAt, Date lastLoginTime, String token, String username, String password, String role) {
         this.createdAt = createdAt;
         this.lastLoginTime = lastLoginTime;
         this.token = token;
@@ -58,19 +58,19 @@ public class User {
         this.id = id;
     }
 
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getLastLoginTime() {
+    public Date getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(LocalDate lastLoginTime) {
+    public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 
