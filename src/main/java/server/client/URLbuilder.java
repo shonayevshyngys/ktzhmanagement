@@ -1,8 +1,5 @@
 package server.client;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 public class URLbuilder {
     private String username = "name=petroleumApi";
     private String password = "&password=h7BdQFbdk92d3s";

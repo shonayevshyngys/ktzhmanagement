@@ -1,6 +1,5 @@
 import io.javalin.Handler;
 import io.javalin.Javalin;
-import server.client.WagonClient;
 import server.web.Handlers.AdminHandler;
 import server.web.Handlers.LoginHandler;
 import server.web.Handlers.VagonHandler;
@@ -22,8 +21,6 @@ public class App {
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
         app.start(1200);
 
-        //init client
-        WagonClient wc = new WagonClient();
 
         //jwt decoder
         Handler decodeHandler = JavalinJWT.createHeaderDecodeHandler(TokenHandler.jhandler.getProvider());
@@ -36,10 +33,12 @@ public class App {
             path("/login", () -> {
                 post(new LoginHandler(), Collections.singleton(Roles.ANYONE));
             });
-            path("/vagon/:id", () ->{
-                get(new VagonHandler(), new HashSet<>(Arrays.asList(Roles.USER, Roles.ADMIN)));
+            path("/vagon", () ->{
+                get (new VagonHandler(), new HashSet<>(Arrays.asList(Roles.USER, Roles.ADMIN)));
             });
-
+            path("/admin", () ->{
+                get(new AdminHandler(), Collections.singleton(Roles.ADMIN));
+            });
         });
     }
 }

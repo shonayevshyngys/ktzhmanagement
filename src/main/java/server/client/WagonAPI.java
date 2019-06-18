@@ -1,4 +1,4 @@
-package client;
+package server.client;
 
 import io.reactivex.Single;
 import okhttp3.ResponseBody;

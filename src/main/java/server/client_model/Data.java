@@ -2,6 +2,7 @@ package server.client_model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+
 @XmlRootElement(name = "data")
 public class Data {
 

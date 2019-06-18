@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.List;
 
 public class Common_type {
-    @JacksonXmlElementWrapper(useWrapping=false)
     private List<String> name;
 
     private String id;

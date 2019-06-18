@@ -108,9 +108,9 @@ public class Repair {
     @Column
     private long upgrades;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vagon_id")
-    private VagonInfo vagon_id;
+    private VagonInfo vagonId;
 
     public long getId() {
         return id;
@@ -384,12 +384,12 @@ public class Repair {
         this.upgrades = upgrades;
     }
 
-    public VagonInfo getVagon_id() {
-        return vagon_id;
+    public VagonInfo getVagonId() {
+        return vagonId;
     }
 
-    public void setVagon_id(VagonInfo vagon_id) {
-        this.vagon_id = vagon_id;
+    public void setVagonId(VagonInfo vagonId) {
+        this.vagonId = vagonId;
     }
 
     public Repair() {

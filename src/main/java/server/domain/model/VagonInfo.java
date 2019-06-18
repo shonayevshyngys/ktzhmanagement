@@ -5,11 +5,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Entity(name = "VagonInfo")
 public class VagonInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wagon_cache_id")
     private WagonCache wagonCacheId;
     @Column
@@ -154,7 +155,8 @@ public class VagonInfo {
     private Date vagon_spec_mileage_left_date;
     @Column
     private Date vagon_spec_build_date;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vagon_id")
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "vagonId")
     private List<Repair> repairs;
 
     public VagonInfo() {
