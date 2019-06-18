@@ -22,7 +22,7 @@ public class UserAction {
     @Column (name = "user_agent")
     private String userAgent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User userId;
 
