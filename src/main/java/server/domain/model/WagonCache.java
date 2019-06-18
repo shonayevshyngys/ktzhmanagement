@@ -12,8 +12,6 @@ public class WagonCache {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId")
     private List<Position> positions;
 
@@ -169,6 +167,84 @@ public class WagonCache {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "wagonId")
     private List<Repair> repairs;
+
+    public WagonCache(List<Position> positions, UserWagon userWagonId, LocalDate lastUpdatedAt, long vagon_no, String client_id, String from_name, long from_code, long from_road_code, String from_road_name, double from_latitude, double from_longitude, String to_name, long to_code, long user_to_code, long to_road_code, double to_road_name, double to_latitude, double to_longitude, Calendar send_date, Date send_date_time, long send_date_timestamp, long departure_timestamp, long departure_date_error, Date time_added, Date arrive_date, String processed, long groud_id, String group_name, String arrived, String round_vagon, long arrive_by_destination, double days_wo_movement, double days_wo_operation, String vagon_comment, Calendar eta, Date arrive_date_real, Date arrive_date_real_timestamp, long vagon_spec_no, double vagon_spec_tare, long vagon_spec_capacity, long vagon_spec_type, String vagon_spec_desc, long vagon_spec_common_type_code, long vagon_spec_common_type_name, String vagon_spec_model, long vagon_spec_model_no, String vagon_spec_model_cypher, long vagon_spec_model_kind, long vagon_spec_model_charact, long vagon_spec_uch_specializ, long vagon_spec_material_body, long vagon_spec_carriage_works, long vagon_spec_carrying_capacity, double vagon_spec_tare_min, double vagon_spec_tare_max, long vagon_spec_autocoupl_len, long vagon_spec_vagon_axis, double vagon_spec_axial_load, long vagon_spec_adapter_plate, double vagon_spec_body_space, long vagon_spec_delivery_year, long vagon_spec_obsolete_year, Date vagon_spec_registration_date, String vagon_spec_registration_name, long vagon_spec_next_repair_type, Date vagon_spec_next_repair_date, Date vagon_spec_date_last_dep_repair, Date vagon_spec_date_last_kap_repair, Date vagon_spec_max_service_date, long vagon_spec_mileage_current, Date vagon_spec_mileage_current_date, long vagon_spec_mileage_left, Date vagon_spec_mileage_left_date, Date vagon_spec_build_date, List<Repair> repairs) {
+        this.positions = positions;
+        this.userWagonId = userWagonId;
+        this.lastUpdatedAt = lastUpdatedAt;
+        this.vagon_no = vagon_no;
+        this.client_id = client_id;
+        this.from_name = from_name;
+        this.from_code = from_code;
+        this.from_road_code = from_road_code;
+        this.from_road_name = from_road_name;
+        this.from_latitude = from_latitude;
+        this.from_longitude = from_longitude;
+        this.to_name = to_name;
+        this.to_code = to_code;
+        this.user_to_code = user_to_code;
+        this.to_road_code = to_road_code;
+        this.to_road_name = to_road_name;
+        this.to_latitude = to_latitude;
+        this.to_longitude = to_longitude;
+        this.send_date = send_date;
+        this.send_date_time = send_date_time;
+        this.send_date_timestamp = send_date_timestamp;
+        this.departure_timestamp = departure_timestamp;
+        this.departure_date_error = departure_date_error;
+        this.time_added = time_added;
+        this.arrive_date = arrive_date;
+        this.processed = processed;
+        this.groud_id = groud_id;
+        this.group_name = group_name;
+        this.arrived = arrived;
+        this.round_vagon = round_vagon;
+        this.arrive_by_destination = arrive_by_destination;
+        this.days_wo_movement = days_wo_movement;
+        this.days_wo_operation = days_wo_operation;
+        this.vagon_comment = vagon_comment;
+        this.eta = eta;
+        this.arrive_date_real = arrive_date_real;
+        this.arrive_date_real_timestamp = arrive_date_real_timestamp;
+        this.vagon_spec_no = vagon_spec_no;
+        this.vagon_spec_tare = vagon_spec_tare;
+        this.vagon_spec_capacity = vagon_spec_capacity;
+        this.vagon_spec_type = vagon_spec_type;
+        this.vagon_spec_desc = vagon_spec_desc;
+        this.vagon_spec_common_type_code = vagon_spec_common_type_code;
+        this.vagon_spec_common_type_name = vagon_spec_common_type_name;
+        this.vagon_spec_model = vagon_spec_model;
+        this.vagon_spec_model_no = vagon_spec_model_no;
+        this.vagon_spec_model_cypher = vagon_spec_model_cypher;
+        this.vagon_spec_model_kind = vagon_spec_model_kind;
+        this.vagon_spec_model_charact = vagon_spec_model_charact;
+        this.vagon_spec_uch_specializ = vagon_spec_uch_specializ;
+        this.vagon_spec_material_body = vagon_spec_material_body;
+        this.vagon_spec_carriage_works = vagon_spec_carriage_works;
+        this.vagon_spec_carrying_capacity = vagon_spec_carrying_capacity;
+        this.vagon_spec_tare_min = vagon_spec_tare_min;
+        this.vagon_spec_tare_max = vagon_spec_tare_max;
+        this.vagon_spec_autocoupl_len = vagon_spec_autocoupl_len;
+        this.vagon_spec_vagon_axis = vagon_spec_vagon_axis;
+        this.vagon_spec_axial_load = vagon_spec_axial_load;
+        this.vagon_spec_adapter_plate = vagon_spec_adapter_plate;
+        this.vagon_spec_body_space = vagon_spec_body_space;
+        this.vagon_spec_delivery_year = vagon_spec_delivery_year;
+        this.vagon_spec_obsolete_year = vagon_spec_obsolete_year;
+        this.vagon_spec_registration_date = vagon_spec_registration_date;
+        this.vagon_spec_registration_name = vagon_spec_registration_name;
+        this.vagon_spec_next_repair_type = vagon_spec_next_repair_type;
+        this.vagon_spec_next_repair_date = vagon_spec_next_repair_date;
+        this.vagon_spec_date_last_dep_repair = vagon_spec_date_last_dep_repair;
+        this.vagon_spec_date_last_kap_repair = vagon_spec_date_last_kap_repair;
+        this.vagon_spec_max_service_date = vagon_spec_max_service_date;
+        this.vagon_spec_mileage_current = vagon_spec_mileage_current;
+        this.vagon_spec_mileage_current_date = vagon_spec_mileage_current_date;
+        this.vagon_spec_mileage_left = vagon_spec_mileage_left;
+        this.vagon_spec_mileage_left_date = vagon_spec_mileage_left_date;
+        this.vagon_spec_build_date = vagon_spec_build_date;
+        this.repairs = repairs;
+    }
 
     public WagonCache() {
     }
