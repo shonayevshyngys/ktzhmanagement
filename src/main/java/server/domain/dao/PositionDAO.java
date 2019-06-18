@@ -3,62 +3,58 @@ package server.domain.dao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
-import server.domain.model.User;
-import server.domain.model.UserAction;
+import server.domain.model.Position;
 
 import java.util.List;
 
-public class UserActionsDAO {
-    public static void persist(UserAction userAction) {
+public class PositionDAO {
+
+    public static void persist(Position position) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.save(userAction);
+        session.save(position);
         transaction.commit();
         session.close();
     }
 
-    public static User getByUserId(long id) {
+    public static void update(Position positiono) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        User user = (User) session
-                .createQuery("FROM Users u WHERE u.id = :id")
-                .setParameter("id", id).getSingleResult();
+
+        session.update(positiono);
+
         transaction.commit();
         session.close();
-        return user;
     }
 
-    public static UserAction getById(long id) {
+    public static void delete(Position position) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        UserAction userAction = (UserAction)
-                session.createQuery("FROM user_actions ua WHERE ua.id = :id")
-                        .setParameter("id", id).getSingleResult();
+        session.delete(position);
         transaction.commit();
         session.close();
-        return userAction;
     }
 
-    public static List<UserAction> getByActionType(String actionType) {
+    public static List<Position> getAllPositions() {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<UserAction> userActions = (List<UserAction>) session
-                .createQuery("FROM user_actions ua WHERE ua.action = :actionType")
-                .setParameter("actionType", actionType).list();
+        List<Position> positions = (List<Position>) session.createQuery("From server.domain.model.Position").list();
         transaction.commit();
         session.close();
-        return userActions;
+        return positions;
     }
 
-    public static void delete(UserAction userAction) {
+    public static Position getById(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(userAction);
+        Position position = (Position)
+                session.createQuery("FROM positions p WHERE p.id = :id")
+                        .setParameter("id", id).getSingleResult();
         transaction.commit();
         session.close();
+        return position;
     }
-    //TODO create update
 
     public static void deleteById(long id) {
         delete(getById(id));

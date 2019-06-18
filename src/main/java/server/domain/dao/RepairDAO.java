@@ -3,62 +3,59 @@ package server.domain.dao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
-import server.domain.model.User;
-import server.domain.model.UserAction;
+import server.domain.model.Repair;
 
 import java.util.List;
 
-public class UserActionsDAO {
-    public static void persist(UserAction userAction) {
+public class RepairDAO {
+    //todo add another methods
+    public static void persist(Repair repair) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.save(userAction);
+        session.save(repair);
         transaction.commit();
         session.close();
     }
 
-    public static User getByUserId(long id) {
+    //TODO change update
+    public static void update(Repair repair) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        User user = (User) session
-                .createQuery("FROM Users u WHERE u.id = :id")
-                .setParameter("id", id).getSingleResult();
+
+        session.update(repair);
+
         transaction.commit();
         session.close();
-        return user;
     }
 
-    public static UserAction getById(long id) {
+    public static void delete(Repair repair) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        UserAction userAction = (UserAction)
-                session.createQuery("FROM user_actions ua WHERE ua.id = :id")
-                        .setParameter("id", id).getSingleResult();
+        session.delete(repair);
         transaction.commit();
         session.close();
-        return userAction;
     }
 
-    public static List<UserAction> getByActionType(String actionType) {
+    public static List<Repair> getAllRepairs() {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<UserAction> userActions = (List<UserAction>) session
-                .createQuery("FROM user_actions ua WHERE ua.action = :actionType")
-                .setParameter("actionType", actionType).list();
+        List<Repair> repairs = (List<Repair>) session.createQuery("From server.domain.model.Repair").list();
         transaction.commit();
         session.close();
-        return userActions;
+        return repairs;
     }
 
-    public static void delete(UserAction userAction) {
+    public static Repair getById(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(userAction);
+        Repair position = (Repair)
+                session.createQuery("FROM Repairs r WHERE r.id = :id")
+                        .setParameter("id", id).getSingleResult();
         transaction.commit();
         session.close();
+        return position;
     }
-    //TODO create update
 
     public static void deleteById(long id) {
         delete(getById(id));

@@ -3,62 +3,59 @@ package server.domain.dao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
-import server.domain.model.User;
-import server.domain.model.UserAction;
+import server.domain.model.UserWagon;
 
 import java.util.List;
 
-public class UserActionsDAO {
-    public static void persist(UserAction userAction) {
+public class UserWagonDAO {
+    //todo add another methods
+    public static void persist(UserWagon userWagon) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.save(userAction);
+        session.save(userWagon);
         transaction.commit();
         session.close();
     }
 
-    public static User getByUserId(long id) {
+    //TODO change update
+    public static void update(UserWagon userWagon) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        User user = (User) session
-                .createQuery("FROM Users u WHERE u.id = :id")
-                .setParameter("id", id).getSingleResult();
+
+        session.update(userWagon);
+
         transaction.commit();
         session.close();
-        return user;
     }
 
-    public static UserAction getById(long id) {
+    public static void delete(UserWagon userWagon) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        UserAction userAction = (UserAction)
-                session.createQuery("FROM user_actions ua WHERE ua.id = :id")
-                        .setParameter("id", id).getSingleResult();
+        session.delete(userWagon);
         transaction.commit();
         session.close();
-        return userAction;
     }
 
-    public static List<UserAction> getByActionType(String actionType) {
+    public static List<UserWagon> getAllRepairs() {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<UserAction> userActions = (List<UserAction>) session
-                .createQuery("FROM user_actions ua WHERE ua.action = :actionType")
-                .setParameter("actionType", actionType).list();
+        List<UserWagon> userWagons = (List<UserWagon>) session.createQuery("From server.domain.model.UserWagon").list();
         transaction.commit();
         session.close();
-        return userActions;
+        return userWagons;
     }
 
-    public static void delete(UserAction userAction) {
+    public static UserWagon getById(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(userAction);
+        UserWagon userWagon = (UserWagon)
+                session.createQuery("FROM user_wagons uw WHERE uw.id = :id")
+                        .setParameter("id", id).getSingleResult();
         transaction.commit();
         session.close();
+        return userWagon;
     }
-    //TODO create update
 
     public static void deleteById(long id) {
         delete(getById(id));
