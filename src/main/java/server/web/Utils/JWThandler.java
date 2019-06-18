@@ -33,7 +33,8 @@ public class JWThandler {
             JWTCreator.Builder token = JWT.create()
                     .withExpiresAt(new Date(System.currentTimeMillis() + (5 * 60 * 1000)))
                     .withClaim("role",user.getRole())
-                    .withClaim("username", user.getUsername());  //add anything you need
+                    .withClaim("username", user.getUsername())
+                    .withClaim("id", user.getId());
             return token.sign(alg);
         };
 

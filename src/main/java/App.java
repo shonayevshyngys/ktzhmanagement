@@ -1,11 +1,7 @@
 import io.javalin.Handler;
 import io.javalin.Javalin;
-import server.client_model.User;
 import server.domain.HibernateUtils;
-import server.domain.UniversalDAO;
-import server.web.Handlers.AdminHandler;
-import server.web.Handlers.LoginHandler;
-import server.web.Handlers.VagonHandler;
+import server.web.Handlers.*;
 import server.web.JWT.JavalinJWT;
 import server.web.Utils.Roles;
 import server.web.Utils.TokenHandler;
@@ -14,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.crud;
 
 public class App {
     public static void main(String[] args) {
@@ -33,15 +29,19 @@ public class App {
 
         //routing
         app.routes(() -> {
-            path("/login", () -> {
-                post(new LoginHandler(), Collections.singleton(Roles.ANYONE));
-            });
-            path("/vagon/:id", () ->{
-                get(new VagonHandler(), new HashSet<>(Arrays.asList(Roles.USER, Roles.ADMIN)));
-            });
-            path("/admin", () ->{
-                get(new AdminHandler(), Collections.singleton(Roles.ADMIN));
-            });
+            crud("/wagon/:id", new WagonController(), new HashSet<>(Arrays.asList(Roles.USER)));
+            app.post("/login", new LoginHandler(), Collections.singleton(Roles.ANYONE));
+            app.patch("/updateAllUserWagons", new AllUserWagonsHandler(), Collections.singleton(Roles.USER));
+            app.get("/userInfo", context -> {
+                context.status(200);
+                context.json("this is info"); //TODO implement UserInfo response + billing
+            },Collections.singleton(Roles.USER) );
+
+
+            //admin
+            app.post("/admin", new AdminLoginHandler(), Collections.singleton(Roles.ANYONE));
+            crud("/users/:id", new UserController(), Collections.singleton(Roles.ADMIN));
+
         });
     }
 }

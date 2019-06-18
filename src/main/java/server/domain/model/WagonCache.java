@@ -12,6 +12,8 @@ public class WagonCache {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId")
     private List<Position> positions;
 
@@ -20,7 +22,7 @@ public class WagonCache {
     private UserWagon userWagonId;
 
     @Column
-    private LocalDate lastUpdatedAr;
+    private LocalDate lastUpdatedAt;
 
     @Column
     private long vagon_no;
@@ -171,12 +173,12 @@ public class WagonCache {
     public WagonCache() {
     }
 
-    public LocalDate getLastUpdatedAr() {
-        return lastUpdatedAr;
+    public LocalDate getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastUpdatedAr(LocalDate lastUpdatedAr) {
-        this.lastUpdatedAr = lastUpdatedAr;
+    public void setLastUpdatedAt(LocalDate lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 
     public long getId() {
