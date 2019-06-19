@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.jetbrains.annotations.NotNull;
 import server.domain.HibernateUtils;
 import server.domain.UniversalDAO;
+import server.domain.dao.UserActionsDAO;
 import server.domain.dao.UserDAO;
 import server.domain.model.User;
 import server.domain.model.UserAction;
@@ -18,6 +19,7 @@ import server.web.response_models.ErrorResponse;
 import server.web.response_models.JwtResponse;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class LoginHandler implements Handler {
 
@@ -29,6 +31,9 @@ public class LoginHandler implements Handler {
         if (HashUtils.checkPassword(cr.getPassword(), u.getPassword())){
             context.status(200);
             String token = TokenHandler.jhandler.getToken(u);
+            u.setToken(token);
+            UserDAO.update(u);
+            UserActionsDAO.persist(new UserAction("logged_in", new Date(), context.ip(), context.userAgent(), u));
             context.json(new JwtResponse(token));
         }
         else

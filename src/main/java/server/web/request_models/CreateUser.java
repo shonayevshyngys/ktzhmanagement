@@ -11,6 +11,9 @@ public class CreateUser {
         this.role = role;
     }
 
+    public CreateUser() {
+    }
+
     public String getUsername() {
         return username;
     }

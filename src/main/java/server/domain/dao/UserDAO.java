@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
 import server.domain.model.User;
+import server.web.response_models.UserResponse;
 
 import java.util.List;
 
@@ -29,7 +30,11 @@ public class UserDAO {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         @SuppressWarnings("unchecked")
-        List<User> users = (List<User>) session.createQuery("From server.domain.model.User").list();
+        List<User> users = (List<User>) session.createQuery("From Users").list();
+
+//        users.forEach(user -> {
+//            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
+//        });
         transaction.commit();
         session.close();
         return users;

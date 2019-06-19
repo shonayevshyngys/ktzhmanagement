@@ -11,7 +11,9 @@ import server.web.request_models.CreateUser;
 import server.web.request_models.UpdateUser;
 import server.web.response_models.ErrorResponse;
 import server.web.response_models.SuccessMessage;
+import server.web.response_models.UserResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +21,11 @@ public class UserController implements CrudHandler {
     @Override
     public void create(@NotNull Context context) {
         CreateUser createUser = context.bodyAsClass(CreateUser.class);
-        if (!createUser.getRole().equals("admin") || !createUser.getRole().equals("user")){
+        if (!(createUser.getRole().equals("admin") || createUser.getRole().equals("user"))){
             context.status(400);
             context.json(new ErrorResponse("bad roles"));
         }
-        else{
+        else {
             User user = new User(new Date(), null, "", createUser.getUsername(), HashUtils.hashPassword(createUser.getPassword()), createUser.getRole());
             UserDAO.persist(user);
             context.status(201);
@@ -44,6 +46,10 @@ public class UserController implements CrudHandler {
     @Override
     public void getAll(@NotNull Context context) {
         List<User> userList = UserDAO.getAllUsers();
+//        List<UserResponse> userResponses = new ArrayList<>();
+//        for (User user : userList) {
+//            userResponses.add(new UserResponse(user));
+//        }
         context.status(200);
         context.json(userList);
     }

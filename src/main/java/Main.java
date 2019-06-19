@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) {
        // WagonCache wagonCache = new WagonCache(new);
         //WagonCacheDAO.persist(wagonCache);
-        UserDAO.persist(new User(new Date(), new Date(), "", "aman1", HashUtils.hashPassword("password"), "user"));
+//        UserDAO.persist(new User(new Date(), new Date(), "", "aman1", HashUtils.hashPassword("password"), "user"));
         //UserWagon userWagon = new UserWagon(UserDAO.getById(1),"Aman", WagonCacheDAO.getById());
 
     }

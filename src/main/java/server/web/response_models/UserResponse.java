@@ -1,65 +1,44 @@
-package server.domain.model;
+package server.web.response_models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import server.domain.model.User;
+import server.domain.model.UserAction;
 
-import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-
-@Entity(name = "Users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserResponse {
     private long id;
-
-    @Column(name = "create_at")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-
-    @Column(name = "last_login_time")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginTime;
-
-    @Column(name = "token")
     private String token;
-
-    @Column(name = "username", nullable = false, unique = true)
     private String username;
-
-    @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "role", nullable = false)
     private String role;
+    private List<UserAction> userActions;
 
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "userId")
-    private List<UserAction> userActionList;
-
-    @JsonIgnore
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private List<UserWagon> userWagons;
-
-    public User() {
-
-    }
-
-    public User(Date createdAt, Date lastLoginTime, String token, String username, String password, String role) {
+    public UserResponse(long id, Date createdAt, Date lastLoginTime, String token, String username, String password, String role, List<UserAction> userActions) {
+        this.id = id;
         this.createdAt = createdAt;
         this.lastLoginTime = lastLoginTime;
         this.token = token;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.userActions = userActions;
     }
 
-    public List<UserWagon> getUserWagons() {
-        return userWagons;
+    public UserResponse() {
     }
 
-    public void setUserWagons(List<UserWagon> userWagons) {
-        this.userWagons = userWagons;
+    public UserResponse(User user) {
+        this.id = user.getId();
+        this.createdAt = user.getCreatedAt();
+        this.lastLoginTime = user.getLastLoginTime();
+        this.token = user.getToken();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+        this.userActions = user.getUserActionList();
     }
 
     public long getId() {
@@ -118,11 +97,11 @@ public class User {
         this.role = role;
     }
 
-    public List<UserAction> getUserActionList() {
-        return userActionList;
+    public List<UserAction> getUserActions() {
+        return userActions;
     }
 
-    public void setUserActionList(List<UserAction> userActionList) {
-        this.userActionList = userActionList;
+    public void setUserActions(List<UserAction> userActions) {
+        this.userActions = userActions;
     }
 }

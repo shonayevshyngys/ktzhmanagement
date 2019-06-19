@@ -9,6 +9,9 @@ public class UpdateUser {
         this.password = password;
     }
 
+    public UpdateUser() {
+    }
+
     public String getUsername() {
         return username;
     }
