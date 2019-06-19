@@ -9,11 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
+import server.client_model.Vagon;
 import server.domain.dao.*;
-import server.domain.model.User;
-import server.domain.model.UserAction;
-import server.domain.model.UserWagon;
-import server.domain.model.WagonCache;
+import server.domain.model.*;
 import server.web.Utils.UserData;
 import server.web.request_models.CreateWagon;
 import server.web.response_models.ErrorResponse;
@@ -21,6 +19,7 @@ import server.web.response_models.SuccessMessage;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -56,9 +55,9 @@ public class WagonController implements CrudHandler {
                                 context.json(new SuccessMessage("Successfuly added wagon"));
                                 UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u)); //add an action id
 
-
                                 WagonCache wagonCache = new WagonCache();
                                 //wagonCache.todo add normal wagonCache;
+
                                 /*wagonCache.setClient_id(String.valueOf(random.nextInt(1000000000)));*/
                                 WagonCacheDAO.persist(wagonCache);
                             } else {
@@ -155,8 +154,6 @@ public class WagonController implements CrudHandler {
             context.status(200);
             context.json(wc);
 
-        } else if (wc == null) {
-            context.status(400);
         } else {
             context.status(200);
             context.json(new ErrorResponse("Here is no list of the WagonCache"));
@@ -191,4 +188,5 @@ public class WagonController implements CrudHandler {
     private boolean getStatus(String xml){
         return xml.contains("<status>OK</status>");
     }
+
 }

@@ -1,5 +1,9 @@
 package server.domain.model;
 
+import server.client_model.Data;
+import server.client_model.Vagon;
+import server.web.Utils.DateParser;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
@@ -162,6 +166,73 @@ public class Position {
     private Date waybill_send_date;
 
     public Position() {
+    }
+
+    public Position(WagonCache wagonCacheId, server.client_model.Position position) {
+
+        this.wagonCacheId = wagonCacheId;
+
+        this.current_position_date = DateParser.parseFromStringToDate(position.getCurrent_position_date(),"dd.MMM.yyyy,HH:mm");
+        this.current_position_date_unix_timestamp = Long.valueOf(position.getCurrent_position_date_unix_timestamp());
+        this.utc_timestamp = Long.valueOf(position.getUtc_timestamp());
+        this.utc_datetime = DateParser.parseFromStringToDate(position.getUtc_datetime(),"yyyy-MM-dd HH:mm:ss");
+        this.current_position = position.getCurrent_position();
+        this.current_position_code = Long.valueOf(position.getCurrent_position_code());
+        this.current_position_road_code = Long.valueOf(position.getCurrent_position_road_code());
+        this.current_position_country_iso = Long.valueOf(position.getCurrent_position_country_iso());
+        this.current_position_latitude = Double.valueOf(position.getCurrent_position_latitude());
+        this.current_position_longitude = Double.valueOf(position.getCurrent_position_longitude());
+        this.operation_id = Long.valueOf(position.getOperation_id());
+        this.operation = position.getOperation();
+        this.operation_code = position.getOperation_code();
+        this.operation_asoup_code = Long.valueOf(position.getOperation_asoup_code());
+        this.operation_type = position.getOperation_type();
+        this.train_index = position.getTrain_index();
+        this.train_number = Long.valueOf(position.getTrain_number());
+        this.cont_train = Long.valueOf(position.getCont_train());
+        this.tr_from_name = position.getTr_from().getName_ru();
+        this.tr_from_station_code = Long.valueOf(position.getTr_from().getStation_code());
+        this.tr_from_road_code = Long.valueOf(position.getTr_from().getRoad_code());
+        this.tr_from_country_code = Long.valueOf(position.getTr_from().getCountry_code_iso());
+        this.tr_from_country_code_iso = Long.valueOf(position.getTr_from().getCountry_code_iso());
+        this.tr_to_name_ru = position.getTr_to().getName_ru();
+        this.tr_tostation_code = Long.valueOf(position.getTr_to().getStation_code());
+        this.tr_to_road_code = Long.valueOf(position.getTr_to().getRoad_code());
+        this.tr_to_country_code = Long.valueOf(position.getTr_to().getCountry_code());
+        this.tr_to_country_code_iso = Long.valueOf(position.getTr_to().getCountry_code_iso());
+        this.state = position.getState();
+        this.country_code = position.getTr_to().getCountry_code();
+        this.weight = Double.valueOf(position.getWeight());
+        this.loaded = position.getLoaded();
+        this.corrected_etsng_name = Long.valueOf(position.getCorrected_etsng().getName());
+        this.previos_etsng_name = Long.valueOf(position.getPrevious_etsng().getName());
+        this.days_end = position.getDays_end();
+        this.distance_end = Long.valueOf(position.getDistance_end());
+        this.distance_end_geo = Long.valueOf(position.getDistance_end_geo());
+        this.full_distance = Long.valueOf(position.getFull_distance());
+        this.additional = position.getAdditional();
+        this.update_time = DateParser.parseFromStringToDate(position.getUpdate_time(),"dd.MM.yyyy, HH:mm:ss");
+        this.nomer_nakladnoi = position.getNomer_nakladnoi();
+        this.gruz_sender = Long.valueOf(position.getGruz_sender());
+        this.gruz_sender_okpo = Long.valueOf(position.getGruz_sender_okpo());
+        this.gruz_sender_name = position.getGruz_sender_name();
+        this.gruz_receiver = Long.valueOf(position.getGruz_receiver());
+        this.gruz_receiver_okpo = Long.valueOf(position.getGruz_receiver_okpo());
+        this.gruz_receiver_name = position.getGruz_receiver_name();
+        this.broken = position.getBroken();
+        this.send_date_railway = DateParser.parseFromStringToDate(position.getSend_date_railway(),"dd.MM.yyyy, HH:mm");
+        this.trade_union_duration = Double.valueOf(position.getTrade_union_duration());
+        this.from_station_name = position.getFrom_station().getName_ru();
+        this.from_station_station_code = Long.valueOf(position.getFrom_station().getStation_code());
+        this.from_station_road_code = Long.valueOf(position.getFrom_station().getRoad_code());
+        this.road_code_country_code = Long.valueOf(position.getTo_station().getRoad_code());
+        this.country_code_country_code_iso = Long.valueOf(position.getFrom_station().getCountry_code());
+        this.to_station_name = position.getTo_station().getName_ru();
+        this.to_station_station_code = Long.valueOf(position.getTo_station().getStation_code());
+        this.to_station_country_code = Long.valueOf(position.getTo_station().getCountry_code());
+        this.to_station_country_code_iso = Long.valueOf(position.getTo_station().getCountry_code_iso());
+        this.waybill_send_date = DateParser.parseFromStringToDate(position.getWaybill().getSend_date(),"yyyy-MM-dd HH:mm:ss");
+
     }
 
     public Position(WagonCache wagonCacheId, Date current_position_date, long current_position_date_unix_timestamp, long utc_timestamp, Date utc_datetime, String current_position, long current_position_code, long current_position_road_code, long current_position_country_iso, double current_position_latitude, double current_position_longitude, long operation_id, String operation, String operation_code, long operation_asoup_code, String operation_type, String train_index, long train_number, long cont_train, String tr_from_name, long tr_from_station_code, long tr_from_road_code, long tr_from_country_code, long tr_from_country_code_iso, String tr_to_name_ru, long tr_tostation_code, long tr_to_road_code, long tr_to_country_code, long tr_to_country_code_iso, String state, String country_code, double weight, String loaded, long corrected_etsng_name, long previos_etsng_name, String days_end, long distance_end, long distance_end_geo, long full_distance, String additional, Date update_time, String nomer_nakladnoi, long gruz_sender, long gruz_sender_okpo, String gruz_sender_name, long gruz_receiver, long gruz_receiver_okpo, String gruz_receiver_name, String broken, Date send_date_railway, double trade_union_duration, String from_station_name, long from_station_station_code, long from_station_road_code, long road_code_country_code, long country_code_country_code_iso, String to_station_name, long to_station_station_code, long to_station_country_code, long to_station_country_code_iso, Date waybill_send_date) {
