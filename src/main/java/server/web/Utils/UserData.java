@@ -8,9 +8,7 @@ public class UserData {
     private String id;
 
     public UserData(Context ctx) {
-        this.username = TokenHandler.jhandler.getPayload(ctx).getClaim("username").asString();
-        this.role = TokenHandler.jhandler.getPayload(ctx).getClaim("role").asString();
-        this.id = TokenHandler.jhandler.getPayload(ctx).getClaim("id").asString();
+
     }
 
     public UserData() {

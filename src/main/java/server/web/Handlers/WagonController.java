@@ -11,9 +11,11 @@ import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.domain.dao.UserActionsDAO;
 import server.domain.dao.UserDAO;
+import server.domain.dao.UserWagonDAO;
 import server.domain.dao.WagonCacheDAO;
 import server.domain.model.User;
 import server.domain.model.UserAction;
+import server.domain.model.UserWagon;
 import server.domain.model.WagonCache;
 import server.web.Utils.UserData;
 import server.web.request_models.CreateWagon;
@@ -75,13 +77,60 @@ public class WagonController implements CrudHandler {
     }
 
     @Override
-    public void delete(@NotNull Context context, @NotNull String s) {
+    public void delete(@NotNull Context context, @NotNull String param) {
         //delete
         UserData userData = new UserData(context);
-        int param = Integer.valueOf(s);
+        User user = UserDAO.getByUsername(userData.getUsername());
+//        List<UserWagon> uw = UserWagonDAO.getByUserId(Long.valueOf(param));
+        if(user.getUserWagons().stream().filter(b -> b.getClientId().equals(user.getUsername()+param)).findFirst().orElse(null) != null)
+        {
+            WagonClient.takeOff(user.getUsername()+param).subscribe(new SingleObserver<ResponseBody>() {
+                @Override
+                public void onSubscribe(Disposable disposable) {
+                    System.err.println("taking off data from server");
+                }
+
+                @Override
+                public void onSuccess(ResponseBody responseBody) {
+
+                    try{
+                        if (getStatus(responseBody.string())){
+                            //TODO implement delete by client_id in userWagon and delete userWagon over there
+                            WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername()+param));
+                        }
+                        else {
+                            context.status(400);
+                            context.json(new ErrorResponse("Something went wrong"));
+                        }
+                    } catch (IOException e) {
+                        context.status(400);
+                        context.json(new ErrorResponse("Something went wrong"));
+                        e.printStackTrace();
+                    }
+
+//                if(WagonCacheDAO.getWagonCacheByWagonNo(param) != null){
+//                    WagonCacheDAO.delete(WagonCacheDAO.getWagonCacheByWagonNo(param));
+//                    context.status(200);
+//                }
+//                else {
+//                    context.status(400);
+//                    context.json(new ErrorResponse("There is not such wagon"));
+//
+//                }
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    context.status(400);
+                    context.json(new ErrorResponse("Didnt connect to latyshi"));
+                }
+            });
+        }
+
         //take off wagon
 
         //check for if this wagon exists in list of user wagons
+
     }
 
     @Override
@@ -128,4 +177,7 @@ public class WagonController implements CrudHandler {
         //TODO implement update through delete + insert
     }
 
+    private boolean getStatus(String xml){
+        return xml.contains("<status>OK</status>");
+    }
 }
