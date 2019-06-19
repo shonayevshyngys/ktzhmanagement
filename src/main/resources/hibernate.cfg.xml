@@ -11,7 +11,7 @@
         <property name="connection.pool_size">10</property>
         <property name="hibernate.show_sql">true</property>
         <!-- DB schema will be updated if needed -->
-<!--        <property name="hbm2ddl.auto">update</property>-->
+<!--        <property name="hbm2ddl.auto">create-drop</property>-->
         <mapping class="server.domain.model.User"/>
         <mapping class="server.domain.model.Position"/>
         <mapping class="server.domain.model.UserAction"/>

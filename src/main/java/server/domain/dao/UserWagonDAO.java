@@ -13,7 +13,6 @@ public class UserWagonDAO {
     public static void persist(UserWagon userWagon) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        userWagon.setClientId(userWagon.getClientId() + userWagon.getWagonCacheId().getVagon_no());
         session.save(userWagon);
         transaction.commit();
         session.close();
@@ -66,6 +65,17 @@ public class UserWagonDAO {
         List<UserWagon> userWagon = (List<UserWagon>)
                 session.createQuery("FROM user_wagons uw WHERE uw.user.id = :id")
                         .setParameter("id", id).list();
+        transaction.commit();
+        session.close();
+        return userWagon;
+    }
+
+    public static UserWagon getByClientId(String clientId) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        UserWagon userWagon = (UserWagon)
+                session.createQuery("FROM user_wagons uw WHERE uw.clientId = :clientId")
+                        .setParameter("clientId", clientId).getSingleResult();
         transaction.commit();
         session.close();
         return userWagon;

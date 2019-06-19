@@ -9,13 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
+import server.client_model.Vagon_info;
 import server.domain.dao.UserActionsDAO;
 import server.domain.dao.UserDAO;
+import server.domain.dao.UserWagonDAO;
 import server.domain.dao.WagonCacheDAO;
-import server.domain.model.User;
-import server.domain.model.UserAction;
-import server.domain.model.UserWagon;
-import server.domain.model.WagonCache;
+import server.domain.model.*;
 import server.web.Utils.UserData;
 import server.web.request_models.CreateWagon;
 import server.web.response_models.ErrorResponse;
@@ -23,6 +22,7 @@ import server.web.response_models.SuccessMessage;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +34,15 @@ public class WagonController implements CrudHandler {
         //post
         UserData userData = new UserData(context);  //get info from session
         CreateWagon cw = context.bodyAsClass(CreateWagon.class); //get info from post body
+        System.out.println("Deserealization passed");
         User u = UserDAO.getByUsername(userData.getUsername());
         String client_id = u.getUsername() + cw.getNo_wagon(); //creating client_id
+        System.out.println("Creating new client wagon" + " " + client_id);
         WagonClient.addWagon(cw.getNo_wagon(), cw.getFrom(), cw.getTo(), cw.getSend_day(), true, client_id, cw.getTakeoff_day())
                 .subscribe(new SingleObserver<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable disposable) {
-                        System.err.println("getting data from server");
+                        System.out.println("getting data from server");
                     }
 
                     @Override
@@ -51,7 +53,13 @@ public class WagonController implements CrudHandler {
                             if (status.equals("OK")) {
                                 context.status(200);
                                 context.json(new SuccessMessage("Successfuly added wagon"));
-                                UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u)); //add an action id
+                                System.out.println("Successfully added wagon");
+
+                                UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u));
+                                System.out.println("Saved user action");
+                                UserWagonDAO.persist(new UserWagon(u, u.getUsername() + cw.getNo_wagon(), null));
+                                System.out.println("Created new UserWagon");
+                                setWagon(u, cw, context);
                             } else {
                                 context.status(400);
                                 context.json(new ErrorResponse("It wasn't successfuly added"));
@@ -93,7 +101,7 @@ public class WagonController implements CrudHandler {
 
                     try {
                         if (getStatus(responseBody.string())) {
-                            //TODO implement delete by client_id in userWagon and delete userWagon over there
+                            //TODO implement delete by client_id in userWagon and delete userWagon `Scorpion: Get over here' over there
                             WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
                         } else {
                             context.status(400);
@@ -183,5 +191,46 @@ public class WagonController implements CrudHandler {
 
     private boolean getStatus(String xml) {
         return xml.contains("<status>OK</status>");
+    }
+
+    private void setWagon(User u, CreateWagon cw, Context context){
+        WagonClient.viewWagons(true, u.getUsername() + cw.getNo_wagon()).subscribe(new SingleObserver<ResponseBody>() {
+            @Override
+            public void onSubscribe(Disposable disposable) {
+                System.out.println("Waiting for response");
+            }
+
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+                try {
+                    UserActionsDAO.persist(new UserAction("get_wagon", new Date(), context.ip(), context.userAgent(), u));
+                    UserWagon userWagon =  UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
+                    System.out.println("created transient userWagon");
+                    Data data = WagonDeserealizator.getData(responseBody.string());
+                    Vagon_info vagon_info = data.getVagon().get(0).getVagon_info();
+                    System.out.println("got vagon_info");
+                    List<Position> positions = new ArrayList<>();
+                    List<Repair> repairs = new ArrayList<>();
+                    System.out.println("Starting to write to cache");
+                    WagonCache cache = new  WagonCache(positions, userWagon,
+                            vagon_info, repairs);
+                    System.out.println("Created transient cache");
+                    UserWagon uw = UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
+                    uw.setWagonCacheId(cache);
+                    UserWagonDAO.update(uw);
+                    System.out.println("Successfully updated");
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+
     }
 }
