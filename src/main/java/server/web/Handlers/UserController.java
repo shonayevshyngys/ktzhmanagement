@@ -7,6 +7,7 @@ import server.domain.UniversalDAO;
 import server.domain.dao.UserDAO;
 import server.domain.model.User;
 import server.web.Utils.HashUtils;
+import server.web.Utils.UserData;
 import server.web.request_models.CreateUser;
 import server.web.request_models.UpdateUser;
 import server.web.response_models.ErrorResponse;
@@ -50,6 +51,10 @@ public class UserController implements CrudHandler {
 //        for (User user : userList) {
 //            userResponses.add(new UserResponse(user));
 //        }
+        UserData userData = new UserData(context);
+        System.out.println(userData.getId());
+        System.out.println(userData.getUsername());
+        System.out.println(userData.getRole());
         context.status(200);
         context.json(userList);
     }

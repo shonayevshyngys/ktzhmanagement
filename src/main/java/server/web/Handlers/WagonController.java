@@ -88,7 +88,7 @@ public class WagonController implements CrudHandler {
     public void getAll(@NotNull Context context) {
         //get w/o params
         UserData userData = new UserData(context);
-        User u = UserDAO.getByUsername(userData.getUsername());
+        User u = UserDAO.getById(Long.valueOf(userData.getId()));
         List<WagonCache> wc = WagonCacheDAO.getAllWagonCacheByUserId(u.getId());
 
         if (!wc.isEmpty()) {
@@ -99,7 +99,7 @@ public class WagonController implements CrudHandler {
             context.status(400);
         } else {
             context.status(200);
-            context.json(new ErrorResponse("Here is no list of the WagonCache"));
+            context.json(new ErrorResponse("There is no list of the WagonCache"));
         }
         //get all user's wagons from cache
     }
@@ -108,9 +108,13 @@ public class WagonController implements CrudHandler {
     public void getOne(@NotNull Context context, @NotNull String s) {
         //get with param
         UserData userData = new UserData(context);
+        System.out.println(userData.getUsername());
+        System.out.println(userData.getId());
+        System.out.println(userData.getRole());
         User u = UserDAO.getById(Long.valueOf(userData.getId()));
         u.getUserWagons().forEach(userWagon -> {
             if (userWagon.getClientId().equals(userData.getUsername() + s)) {
+                System.out.println(userWagon.getClientId());
                 context.status(200);
                 context.json(userWagon);
             }

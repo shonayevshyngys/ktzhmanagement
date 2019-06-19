@@ -13,6 +13,7 @@ public class UserWagonDAO {
     public static void persist(UserWagon userWagon) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
+        userWagon.setClientId(userWagon.getClientId() + userWagon.getWagonCacheId().getVagon_no());
         session.save(userWagon);
         transaction.commit();
         session.close();

@@ -5,6 +5,7 @@ import server.domain.HibernateUtils;
 import server.domain.UniversalDAO;
 import server.domain.dao.UserActionsDAO;
 import server.domain.dao.UserDAO;
+import server.domain.dao.UserWagonDAO;
 import server.domain.dao.WagonCacheDAO;
 import server.domain.model.User;
 import server.domain.model.UserAction;
@@ -23,7 +24,6 @@ public class Main {
        // WagonCache wagonCache = new WagonCache(new);
         //WagonCacheDAO.persist(wagonCache);
 //        UserDAO.persist(new User(new Date(), new Date(), "", "aman1", HashUtils.hashPassword("password"), "user"));
-        //UserWagon userWagon = new UserWagon(UserDAO.getById(1),"Aman", WagonCacheDAO.getById());
-
+        UserWagonDAO.persist(new UserWagon(UserDAO.getById(6),"aman", WagonCacheDAO.getById(1)));
     }
 }

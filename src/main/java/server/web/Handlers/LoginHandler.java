@@ -32,8 +32,11 @@ public class LoginHandler implements Handler {
             context.status(200);
             String token = TokenHandler.jhandler.getToken(u);
             u.setToken(token);
+            u.setLastLoginTime(new Date());
             UserDAO.update(u);
+            System.out.println(u.getId());
             UserActionsDAO.persist(new UserAction("logged_in", new Date(), context.ip(), context.userAgent(), u));
+
             context.json(new JwtResponse(token));
         }
         else
