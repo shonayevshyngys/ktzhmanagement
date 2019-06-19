@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
 import server.domain.model.User;
+import server.domain.model.UserWagon;
+import server.domain.model.WagonCache;
 import server.web.response_models.UserResponse;
 
 import java.util.List;
@@ -24,6 +26,53 @@ public class UserDAO {
         transaction.commit();
         session.close();
         return user;
+    }
+
+    public static List<UserWagon> getAllUserWagonByUserId(long id) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+
+        @SuppressWarnings({"unchecked", "duplicate"})
+        List<UserWagon> userWagons =
+                (List<UserWagon>)
+                        session.createQuery("From user_wagons uw WHERE uw.user.id = :id")
+                                .setParameter("id", id)
+                                .list();
+
+//        users.forEach(user -> {
+//            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
+//        });
+//        userWagons.forEach(userWagon -> {
+//        userWagon.getWagonCacheId()
+//                .setPositions(PositionDAO.getAllPositionsByUserWagonId(userWagon.getId()));
+//        userWagon.getWagonCacheId().setRepairs(RepairDAO.getAllRepairsByUserWagonId(userWagon.getId()));
+//        });
+        userWagons.forEach(userWagon -> {
+            System.out.println(userWagon.getWagonCacheId().getRepairs());
+            System.out.println(userWagon.getWagonCacheId().getClient_id());
+
+        });
+        transaction.commit();
+        session.close();
+        return userWagons;
+    }
+
+    public static List<WagonCache> getAllWagonCacheByUserId(long id) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        @SuppressWarnings({"unchecked", "duplicated"})
+        List<WagonCache> wagonCaches =
+                (List<WagonCache>)
+                        session.createQuery("From wagon_cache wc WHERE wc.userWagonId.id = :id")
+                                .setParameter("id", id)
+                                .list();
+
+//        users.forEach(user -> {
+//            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
+//        });
+        transaction.commit();
+        session.close();
+        return wagonCaches;
     }
 
     public static List<User> getAllUsers() {

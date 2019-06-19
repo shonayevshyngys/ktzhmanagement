@@ -1,29 +1,23 @@
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.mindrot.jbcrypt.BCrypt;
-import server.domain.HibernateUtils;
-import server.domain.UniversalDAO;
-import server.domain.dao.UserActionsDAO;
+import server.domain.dao.PositionDAO;
 import server.domain.dao.UserDAO;
-import server.domain.dao.UserWagonDAO;
 import server.domain.dao.WagonCacheDAO;
-import server.domain.model.User;
-import server.domain.model.UserAction;
-import server.domain.model.UserWagon;
+import server.domain.model.Position;
 import server.domain.model.WagonCache;
-import server.web.Utils.HashUtils;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-       // WagonCache wagonCache = new WagonCache(new);
+        // WagonCache wagonCache = new WagonCache(new);
         //WagonCacheDAO.persist(wagonCache);
 //        UserDAO.persist(new User(new Date(), new Date(), "", "aman1", HashUtils.hashPassword("password"), "user"));
-        UserWagonDAO.persist(new UserWagon(UserDAO.getById(6),"aman", WagonCacheDAO.getById(1)));
+//        UserWagonDAO.persist(new UserWagon(UserDAO.getById(6),"aman", WagonCacheDAO.getById(1)));
+    UserDAO.getAllUserWagonByUserId(6).forEach(wagons -> {
+        System.out.println(wagons.getClientId());
+    });
+//        PositionDAO.getAllPositionsByUserWagonId(1).forEach(position -> System.out.println(position.toString()));
+//        WagonCache wagonCache = WagonCacheDAO.getWagonCacheByUserWagonId(6);
+//        wagonCache.getPositions().forEach(position -> System.out.println(position.getId()));
+//        wagonCache.getRepairs().forEach(repair -> System.out.println(repair.getId()));
+//        System.out.println(WagonCacheDAO.getById(1).getVagon_no());
+
     }
 }

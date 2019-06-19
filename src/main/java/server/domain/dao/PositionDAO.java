@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
 import server.domain.model.Position;
+import server.domain.model.WagonCache;
 
 import java.util.List;
 
@@ -54,6 +55,18 @@ public class PositionDAO {
         transaction.commit();
         session.close();
         return position;
+    }
+
+    public static List<Position> getAllPositionsByUserWagonId(long id) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        @SuppressWarnings({"duplicated", "unchecked"})
+        List<Position> positions = (List<Position>) session
+                .createQuery("FROM positions p where p.wagonCacheId.userWagonId.id = :id")
+                .setParameter("id", id).list();
+        transaction.commit();
+        session.close();
+        return positions;
     }
 
     public static void deleteById(long id) {

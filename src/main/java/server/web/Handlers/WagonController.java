@@ -11,7 +11,6 @@ import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.domain.dao.UserActionsDAO;
 import server.domain.dao.UserDAO;
-import server.domain.dao.UserWagonDAO;
 import server.domain.dao.WagonCacheDAO;
 import server.domain.model.User;
 import server.domain.model.UserAction;
@@ -82,9 +81,8 @@ public class WagonController implements CrudHandler {
         UserData userData = new UserData(context);
         User user = UserDAO.getByUsername(userData.getUsername());
 //        List<UserWagon> uw = UserWagonDAO.getByUserId(Long.valueOf(param));
-        if(user.getUserWagons().stream().filter(b -> b.getClientId().equals(user.getUsername()+param)).findFirst().orElse(null) != null)
-        {
-            WagonClient.takeOff(user.getUsername()+param).subscribe(new SingleObserver<ResponseBody>() {
+        if (user.getUserWagons().stream().filter(b -> b.getClientId().equals(user.getUsername() + param)).findFirst().orElse(null) != null) {
+            WagonClient.takeOff(user.getUsername() + param).subscribe(new SingleObserver<ResponseBody>() {
                 @Override
                 public void onSubscribe(Disposable disposable) {
                     System.err.println("taking off data from server");
@@ -93,12 +91,11 @@ public class WagonController implements CrudHandler {
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
 
-                    try{
-                        if (getStatus(responseBody.string())){
+                    try {
+                        if (getStatus(responseBody.string())) {
                             //TODO implement delete by client_id in userWagon and delete userWagon over there
-                            WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername()+param));
-                        }
-                        else {
+                            WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
+                        } else {
                             context.status(400);
                             context.json(new ErrorResponse("Something went wrong"));
                         }
@@ -137,14 +134,13 @@ public class WagonController implements CrudHandler {
     public void getAll(@NotNull Context context) {
         //get w/o params
         UserData userData = new UserData(context);
-        User u = UserDAO.getById(Long.valueOf(userData.getId()));
-        List<WagonCache> wc = WagonCacheDAO.getAllWagonCacheByUserId(u.getId());
+        List<UserWagon> uw = UserDAO.getAllUserWagonByUserId(Long.valueOf(userData.getId()));
 
-        if (!wc.isEmpty()) {
+        if (!uw.isEmpty()) {
             context.status(200);
-            context.json(wc);
+            context.json(uw);
 
-        } else if (wc == null) {
+        } else if (uw == null) {
             context.status(400);
         } else {
             context.status(200);
@@ -160,13 +156,17 @@ public class WagonController implements CrudHandler {
         System.out.println(userData.getUsername());
         System.out.println(userData.getId());
         System.out.println(userData.getRole());
-        User u = UserDAO.getById(Long.valueOf(userData.getId()));
-        u.getUserWagons().forEach(userWagon -> {
+//        List<WagonCache> wc = UserDAO.getAllWagonCacheByUserId(Long.valueOf(userData.getId()));
+        List<UserWagon> uw =
+                UserDAO.getAllUserWagonByUserId(Long.valueOf(userData.getId()));
+        uw.forEach(userWagon -> {
             if (userWagon.getClientId().equals(userData.getUsername() + s)) {
-                System.out.println(userWagon.getClientId());
+//                userWagon.getWagonCacheId()
+//                        .setPositions(WagonCacheDAO.getAllWagonPositionsByUserWagonId(userWagon.getId()));
                 context.status(200);
                 context.json(userWagon);
             }
+
         });
         // get one wagon from cache
     }
@@ -181,7 +181,7 @@ public class WagonController implements CrudHandler {
         //TODO implement update through delete + insert
     }
 
-    private boolean getStatus(String xml){
+    private boolean getStatus(String xml) {
         return xml.contains("<status>OK</status>");
     }
 }

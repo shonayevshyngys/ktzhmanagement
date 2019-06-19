@@ -1,5 +1,7 @@
 package server.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,7 +111,8 @@ public class Repair {
     @Column
     private long upgrades;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wagonId")
     private WagonCache wagonId;
 

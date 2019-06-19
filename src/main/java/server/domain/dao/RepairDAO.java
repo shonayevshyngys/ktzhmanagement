@@ -46,6 +46,18 @@ public class RepairDAO {
         return repairs;
     }
 
+    public static List<Repair> getAllRepairsByUserWagonId(long id) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        @SuppressWarnings({"unchecked", "duplicated"})
+        List<Repair> repairs = (List<Repair>) session
+                .createQuery("from Repairs r where r.wagonId.userWagonId.id = :id")
+                .setParameter("id", id).list();
+        transaction.commit();
+        session.close();
+        return repairs;
+    }
+
     public static Repair getById(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
