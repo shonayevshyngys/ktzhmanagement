@@ -14,7 +14,6 @@ import server.domain.dao.UserDAO;
 import server.domain.dao.WagonCacheDAO;
 import server.domain.model.User;
 import server.domain.model.UserAction;
-import server.domain.model.UserWagon;
 import server.domain.model.WagonCache;
 import server.web.Utils.UserData;
 import server.web.request_models.CreateWagon;
@@ -24,6 +23,7 @@ import server.web.response_models.SuccessMessage;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 
 public class WagonController implements CrudHandler {
@@ -34,7 +34,7 @@ public class WagonController implements CrudHandler {
         UserData userData = new UserData(context);  //get info from session
         CreateWagon cw = context.bodyAsClass(CreateWagon.class); //get info from post body
         User u = UserDAO.getByUsername(userData.getUsername());
-        String client_id = u.getUsername()+cw.getNo_wagon(); //creating client_id
+        String client_id = u.getUsername() + cw.getNo_wagon(); //creating client_id
         WagonClient.addWagon(cw.getNo_wagon(), cw.getFrom(), cw.getTo(), cw.getSend_day(), true, client_id, cw.getTakeoff_day())
                 .subscribe(new SingleObserver<ResponseBody>() {
                     @Override
@@ -47,12 +47,11 @@ public class WagonController implements CrudHandler {
                         try {
                             Data data = WagonDeserealizator.getData(responseBody.string());
                             String status = data.getResult().getStatus();
-                            if (status.equals("OK")){
+                            if (status.equals("OK")) {
                                 context.status(200);
                                 context.json(new SuccessMessage("Successfuly added wagon"));
-                                UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u )); //add an action id
-                            }
-                            else {
+                                UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u)); //add an action id
+                            } else {
                                 context.status(400);
                                 context.json(new ErrorResponse("It wasn't successfuly added"));
 
@@ -89,6 +88,19 @@ public class WagonController implements CrudHandler {
     public void getAll(@NotNull Context context) {
         //get w/o params
         UserData userData = new UserData(context);
+        User u = UserDAO.getByUsername(userData.getUsername());
+        List<WagonCache> wc = WagonCacheDAO.getAllWagonCacheByUserId(u.getId());
+
+        if (!wc.isEmpty()) {
+            context.status(200);
+            context.json(wc);
+
+        } else if (wc == null) {
+            context.status(400);
+        } else {
+            context.status(200);
+            context.json(new ErrorResponse("Here is no list of the WagonCache"));
+        }
         //get all user's wagons from cache
     }
 
@@ -96,6 +108,13 @@ public class WagonController implements CrudHandler {
     public void getOne(@NotNull Context context, @NotNull String s) {
         //get with param
         UserData userData = new UserData(context);
+        User u = UserDAO.getById(Long.valueOf(userData.getId()));
+        u.getUserWagons().forEach(userWagon -> {
+            if (userWagon.getClientId().equals(userData.getUsername() + s)) {
+                context.status(200);
+                context.json(userWagon);
+            }
+        });
         // get one wagon from cache
     }
 

@@ -24,6 +24,7 @@ public class LoginHandler implements Handler {
     @Override
     public void handle(@NotNull Context context) throws Exception {
         Credentials cr = context.bodyAsClass(Credentials.class);
+        //check
         User u = UserDAO.getByUsername(cr.getUsername());
         if (HashUtils.checkPassword(cr.getPassword(), u.getPassword())){
             context.status(200);

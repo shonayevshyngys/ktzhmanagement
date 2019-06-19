@@ -11,7 +11,7 @@ public class UserWagon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -35,5 +35,37 @@ public class UserWagon {
         this.user = new User(new Date(),new Date(), "", user, "pass", "user");
         this.clientId = user;
         this.wagonCacheId = new WagonCache();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public WagonCache getWagonCacheId() {
+        return wagonCacheId;
+    }
+
+    public void setWagonCacheId(WagonCache wagonCacheId) {
+        this.wagonCacheId = wagonCacheId;
     }
 }

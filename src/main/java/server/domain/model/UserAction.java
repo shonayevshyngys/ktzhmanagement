@@ -1,7 +1,6 @@
 package server.domain.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity(name = "user_actions")
@@ -17,10 +16,10 @@ public class UserAction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column (name = "ip_address")
+    @Column(name = "ip_address")
     private String ipAddress;
 
-    @Column (name = "user_agent")
+    @Column(name = "user_agent")
     private String userAgent;
 
     @ManyToOne(fetch = FetchType.EAGER)

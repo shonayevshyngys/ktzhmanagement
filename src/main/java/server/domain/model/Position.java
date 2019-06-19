@@ -11,7 +11,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wagon_cache_id")
     private WagonCache wagonCacheId;
 
@@ -160,6 +160,73 @@ public class Position {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date waybill_send_date;
+
+    public Position() {
+    }
+
+    public Position(WagonCache wagonCacheId, Date current_position_date, long current_position_date_unix_timestamp, long utc_timestamp, Date utc_datetime, String current_position, long current_position_code, long current_position_road_code, long current_position_country_iso, double current_position_latitude, double current_position_longitude, long operation_id, String operation, String operation_code, long operation_asoup_code, String operation_type, String train_index, long train_number, long cont_train, String tr_from_name, long tr_from_station_code, long tr_from_road_code, long tr_from_country_code, long tr_from_country_code_iso, String tr_to_name_ru, long tr_tostation_code, long tr_to_road_code, long tr_to_country_code, long tr_to_country_code_iso, String state, String country_code, double weight, String loaded, long corrected_etsng_name, long previos_etsng_name, String days_end, long distance_end, long distance_end_geo, long full_distance, String additional, Date update_time, String nomer_nakladnoi, long gruz_sender, long gruz_sender_okpo, String gruz_sender_name, long gruz_receiver, long gruz_receiver_okpo, String gruz_receiver_name, String broken, Date send_date_railway, double trade_union_duration, String from_station_name, long from_station_station_code, long from_station_road_code, long road_code_country_code, long country_code_country_code_iso, String to_station_name, long to_station_station_code, long to_station_country_code, long to_station_country_code_iso, Date waybill_send_date) {
+        this.wagonCacheId = wagonCacheId;
+        this.current_position_date = current_position_date;
+        this.current_position_date_unix_timestamp = current_position_date_unix_timestamp;
+        this.utc_timestamp = utc_timestamp;
+        this.utc_datetime = utc_datetime;
+        this.current_position = current_position;
+        this.current_position_code = current_position_code;
+        this.current_position_road_code = current_position_road_code;
+        this.current_position_country_iso = current_position_country_iso;
+        this.current_position_latitude = current_position_latitude;
+        this.current_position_longitude = current_position_longitude;
+        this.operation_id = operation_id;
+        this.operation = operation;
+        this.operation_code = operation_code;
+        this.operation_asoup_code = operation_asoup_code;
+        this.operation_type = operation_type;
+        this.train_index = train_index;
+        this.train_number = train_number;
+        this.cont_train = cont_train;
+        this.tr_from_name = tr_from_name;
+        this.tr_from_station_code = tr_from_station_code;
+        this.tr_from_road_code = tr_from_road_code;
+        this.tr_from_country_code = tr_from_country_code;
+        this.tr_from_country_code_iso = tr_from_country_code_iso;
+        this.tr_to_name_ru = tr_to_name_ru;
+        this.tr_tostation_code = tr_tostation_code;
+        this.tr_to_road_code = tr_to_road_code;
+        this.tr_to_country_code = tr_to_country_code;
+        this.tr_to_country_code_iso = tr_to_country_code_iso;
+        this.state = state;
+        this.country_code = country_code;
+        this.weight = weight;
+        this.loaded = loaded;
+        this.corrected_etsng_name = corrected_etsng_name;
+        this.previos_etsng_name = previos_etsng_name;
+        this.days_end = days_end;
+        this.distance_end = distance_end;
+        this.distance_end_geo = distance_end_geo;
+        this.full_distance = full_distance;
+        this.additional = additional;
+        this.update_time = update_time;
+        this.nomer_nakladnoi = nomer_nakladnoi;
+        this.gruz_sender = gruz_sender;
+        this.gruz_sender_okpo = gruz_sender_okpo;
+        this.gruz_sender_name = gruz_sender_name;
+        this.gruz_receiver = gruz_receiver;
+        this.gruz_receiver_okpo = gruz_receiver_okpo;
+        this.gruz_receiver_name = gruz_receiver_name;
+        this.broken = broken;
+        this.send_date_railway = send_date_railway;
+        this.trade_union_duration = trade_union_duration;
+        this.from_station_name = from_station_name;
+        this.from_station_station_code = from_station_station_code;
+        this.from_station_road_code = from_station_road_code;
+        this.road_code_country_code = road_code_country_code;
+        this.country_code_country_code_iso = country_code_country_code_iso;
+        this.to_station_name = to_station_name;
+        this.to_station_station_code = to_station_station_code;
+        this.to_station_country_code = to_station_country_code;
+        this.to_station_country_code_iso = to_station_country_code_iso;
+        this.waybill_send_date = waybill_send_date;
+    }
 
 
     public long getId() {

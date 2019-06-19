@@ -19,7 +19,7 @@ public class App {
                 .enableDebugLogging();  //for debug
 
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
-        app.start(1200);
+        app.start(1228);
 
         //init client
         WagonClient wc = new WagonClient();
@@ -35,8 +35,8 @@ public class App {
         app.routes(() -> {
             crud("/wagon/:id", new WagonController(), new HashSet<>(Arrays.asList(Roles.USER)));
             app.post("/login", new LoginHandler(), Collections.singleton(Roles.ANYONE));
-            app.patch("/updateAllUserWagons", new AllUserWagonsHandler(), Collections.singleton(Roles.USER));
-            app.get("/userInfo",new UserInfoHandler(), Collections.singleton(Roles.USER) );
+            app.patch("/update_all_user_wagons", new AllUserWagonsHandler(), Collections.singleton(Roles.USER));
+            app.get("/user_info",new UserInfoHandler(), Collections.singleton(Roles.USER) );
 
 
             //admin

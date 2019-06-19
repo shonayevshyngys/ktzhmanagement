@@ -109,7 +109,7 @@ public class Repair {
     @Column
     private long upgrades;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wagonId")
     private WagonCache wagonId;
 

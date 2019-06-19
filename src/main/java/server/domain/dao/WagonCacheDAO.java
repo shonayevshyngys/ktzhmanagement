@@ -29,26 +29,37 @@ public class WagonCacheDAO {
         return wagonCache;
     }
 
-    public static List<WagonCache> getAllWagonCache() {
+    public static WagonCache getByWagonNo(long no) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.vagon_no = :no")
+                .setParameter("no", no).getSingleResult();
+        transaction.commit();
+        session.close();
+        return wagonCache;
+    }
+
+    public static WagonCache getByClientId(String clientId) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.client_id = :clientId")
+                .setParameter("clientId", clientId).getSingleResult();
+        transaction.commit();
+        session.close();
+        return wagonCache;
+    }
+
+    public static List<WagonCache> getAllWagonCacheByUserId(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         @SuppressWarnings({"unchecked", "dupllicate"})
         List<WagonCache> wagonCacheList = (List<WagonCache>) session
-                .createQuery("From wagon_cache ").list();
+                .createQuery("From wagon_cache wc " +
+                        "WHERE wc.userWagonId.user.id = :id")
+                .setParameter("id", id).list();
         transaction.commit();
         session.close();
         return wagonCacheList;
-    }
-
-    public static UserWagon getByUserWagonId(long id) {
-        Session session = HibernateUtils.getSession();
-        Transaction transaction = session.beginTransaction();
-        UserWagon userWagon = (UserWagon) session
-                .createQuery("FROM user_wagons uw WHERE uw.id = :id")
-                .setParameter("id", id).getSingleResult();
-        transaction.commit();
-        session.close();
-        return userWagon;
     }
 
     public static void update(WagonCache wagonCache) {
