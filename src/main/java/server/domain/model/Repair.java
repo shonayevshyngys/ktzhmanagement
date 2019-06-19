@@ -116,6 +116,42 @@ public class Repair {
     public Repair() {
     }
 
+    public Repair(long last_repairs_vagon_no, long last_repairs_repair_code, String last_repairs_repair_desc, long depot_start_code, long depot_start_road_code, String depot_start_desc, String depot_start_desc_long, long depot_end_code, long depot_end_road_code, String depot_end_desc, String depot_end_desc_long, long repair_call_road_code, String repair_call_road_name, long vu23_number, long vu36_number, String repair_station_name, long repair_station_code, long repair_station_road_code, long repair_station_country_code, long repair_station_country_code_iso, String repair_end_station_name, long repair_end_station_code, long repair_end_station_road_code, long repair_end_station_country_code, long repair_end_station_country_code_iso, String repair_call_datetime, String repair_start_datetime, String repair_end_datetime, long broken, long loaded, long defect_code, long defecr_desc, long upgrades, WagonCache wagonId) {
+        this.last_repairs_vagon_no = last_repairs_vagon_no;
+        this.last_repairs_repair_code = last_repairs_repair_code;
+        this.last_repairs_repair_desc = last_repairs_repair_desc;
+        this.depot_start_code = depot_start_code;
+        this.depot_start_road_code = depot_start_road_code;
+        this.depot_start_desc = depot_start_desc;
+        this.depot_start_desc_long = depot_start_desc_long;
+        this.depot_end_code = depot_end_code;
+        this.depot_end_road_code = depot_end_road_code;
+        this.depot_end_desc = depot_end_desc;
+        this.depot_end_desc_long = depot_end_desc_long;
+        this.repair_call_road_code = repair_call_road_code;
+        this.repair_call_road_name = repair_call_road_name;
+        this.vu23_number = vu23_number;
+        this.vu36_number = vu36_number;
+        this.repair_station_name = repair_station_name;
+        this.repair_station_code = repair_station_code;
+        this.repair_station_road_code = repair_station_road_code;
+        this.repair_station_country_code = repair_station_country_code;
+        this.repair_station_country_code_iso = repair_station_country_code_iso;
+        this.repair_end_station_name = repair_end_station_name;
+        this.repair_end_station_code = repair_end_station_code;
+        this.repair_end_station_road_code = repair_end_station_road_code;
+        this.repair_end_station_country_code = repair_end_station_country_code;
+        this.repair_end_station_country_code_iso = repair_end_station_country_code_iso;
+        this.repair_call_datetime = repair_call_datetime;
+        this.repair_start_datetime = repair_start_datetime;
+        this.repair_end_datetime = repair_end_datetime;
+        this.broken = broken;
+        this.loaded = loaded;
+        this.defect_code = defect_code;
+        this.defecr_desc = defecr_desc;
+        this.upgrades = upgrades;
+        this.wagonId = wagonId;
+    }
 
     public long getId() {
         return id;

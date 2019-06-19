@@ -9,10 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
-import server.domain.dao.UserActionsDAO;
-import server.domain.dao.UserDAO;
-import server.domain.dao.UserWagonDAO;
-import server.domain.dao.WagonCacheDAO;
+import server.domain.dao.*;
 import server.domain.model.User;
 import server.domain.model.UserAction;
 import server.domain.model.UserWagon;
@@ -26,15 +23,20 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 
 public class WagonController implements CrudHandler {
 
+    private Random random = new Random();
     @Override
     public void create(@NotNull Context context) {
         //post
         UserData userData = new UserData(context);  //get info from session
+        System.out.println(userData.getUsername() + " " + userData.getId());
         CreateWagon cw = context.bodyAsClass(CreateWagon.class); //get info from post body
+
+        System.out.println(cw.getNo_wagon() + " " + cw.getFrom());
         User u = UserDAO.getByUsername(userData.getUsername());
         String client_id = u.getUsername() + cw.getNo_wagon(); //creating client_id
         WagonClient.addWagon(cw.getNo_wagon(), cw.getFrom(), cw.getTo(), cw.getSend_day(), true, client_id, cw.getTakeoff_day())
@@ -53,6 +55,12 @@ public class WagonController implements CrudHandler {
                                 context.status(200);
                                 context.json(new SuccessMessage("Successfuly added wagon"));
                                 UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u)); //add an action id
+
+
+                                WagonCache wagonCache = new WagonCache();
+                                //wagonCache.todo add normal wagonCache;
+                                /*wagonCache.setClient_id(String.valueOf(random.nextInt(1000000000)));*/
+                                WagonCacheDAO.persist(wagonCache);
                             } else {
                                 context.status(400);
                                 context.json(new ErrorResponse("It wasn't successfuly added"));
@@ -125,6 +133,9 @@ public class WagonController implements CrudHandler {
                     context.json(new ErrorResponse("Didnt connect to latyshi"));
                 }
             });
+        }
+        else {
+            System.err.println("There is no such client_id");
         }
 
         //take off wagon
