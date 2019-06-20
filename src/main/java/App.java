@@ -1,7 +1,7 @@
 import io.javalin.Handler;
 import io.javalin.Javalin;
 import server.domain.HibernateUtils;
-import server.domain.WagonClient;
+import server.client.WagonClient;
 import server.domain.dao.UserDAO;
 import server.domain.model.User;
 import server.web.Handlers.*;

@@ -1,4 +1,4 @@
-package server.domain;
+package server.client;
 
 
 import io.reactivex.Single;
@@ -88,13 +88,5 @@ public class WagonClient {
     }
 
 
-    public static void main(String[] args) {
-        String url = URLbuilder.newBuilder()
-                .addRequestType("take_off_vagons")
-                .addClientIds("aman10170710967")
-                .set()
-                .build();
-        System.out.println(url);
-    }
 
 }

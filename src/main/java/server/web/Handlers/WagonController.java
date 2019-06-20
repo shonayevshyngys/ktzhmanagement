@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.client_model.Vagon_info;
-import server.domain.WagonClient;
+import server.client.WagonClient;
 import server.domain.dao.*;
 import server.domain.model.*;
 import server.web.Utils.UserData;
