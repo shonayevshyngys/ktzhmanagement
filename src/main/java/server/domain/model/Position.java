@@ -1,9 +1,9 @@
 package server.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import server.web.Utils.DateParser;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity(name = "positions")
@@ -85,7 +85,7 @@ public class Position {
     @Column
     private String tr_to_name_ru;
     @Column
-    private long tr_tostation_code;
+    private long tr_to_station_code;
     @Column
     private long tr_to_road_code;
     @Column
@@ -95,17 +95,15 @@ public class Position {
     @Column
     private String state;
     @Column
-    private String country_code;
+    private String cargo_name;
     @Column
-    private double weight;
+    private String corrected_etsng;
+    @Column
+    private String previous_etsng;
+    @Column
+    private long weight;
     @Column
     private String loaded;
-
-    @Column
-    private long corrected_etsng_name;
-
-    @Column
-    private long previos_etsng_name;
 
     @Column
     private String days_end;
@@ -149,13 +147,15 @@ public class Position {
     @Column
     private long from_station_road_code;
     @Column
-    private long road_code_country_code;
+    private long from_station_country_code;
     @Column
-    private long country_code_country_code_iso;
+    private long from_station_country_code_iso;
     @Column
     private String to_station_name;
     @Column
     private long to_station_station_code;
+    @Column
+    private long to_station_road_code;
     @Column
     private long to_station_country_code;
     @Column
@@ -167,7 +167,96 @@ public class Position {
     public Position() {
     }
 
-    public Position(WagonCache wagonCacheId, Date current_position_date, long current_position_date_unix_timestamp, long utc_timestamp, Date utc_datetime, String current_position, long current_position_code, long current_position_road_code, long current_position_country_iso, double current_position_latitude, double current_position_longitude, long operation_id, String operation, String operation_code, long operation_asoup_code, String operation_type, String train_index, long train_number, long cont_train, String tr_from_name, long tr_from_station_code, long tr_from_road_code, long tr_from_country_code, long tr_from_country_code_iso, String tr_to_name_ru, long tr_tostation_code, long tr_to_road_code, long tr_to_country_code, long tr_to_country_code_iso, String state, String country_code, double weight, String loaded, long corrected_etsng_name, long previos_etsng_name, String days_end, long distance_end, long distance_end_geo, long full_distance, String additional, Date update_time, String nomer_nakladnoi, long gruz_sender, long gruz_sender_okpo, String gruz_sender_name, long gruz_receiver, long gruz_receiver_okpo, String gruz_receiver_name, String broken, Date send_date_railway, double trade_union_duration, String from_station_name, long from_station_station_code, long from_station_road_code, long road_code_country_code, long country_code_country_code_iso, String to_station_name, long to_station_station_code, long to_station_country_code, long to_station_country_code_iso, Date waybill_send_date) {
+    public Position(WagonCache wagonCacheId, server.client_model.Position position) {
+        this.wagonCacheId = wagonCacheId;
+        this.current_position_date = DateParser.parseFromStringToDate(position.getCurrent_position_date(), "dd.MM.yyyy, HH:mm");
+        this.current_position_date_unix_timestamp = position.getCurrent_position_date_unix_timestamp();
+        this.utc_timestamp = position.getUtc_timestamp();
+        this.utc_datetime = DateParser.parseFromStringToDate(position.getUtc_datetime(), "dd.MM.yyyy, HH:mm:ss");
+        this.current_position = position.getCurrent_position();
+        this.current_position_code = position.getCurrent_position_code();
+        this.current_position_road_code = position.getCurrent_position_road_code();
+        this.current_position_country_iso = position.getCurrent_position_country_iso();
+        this.current_position_latitude = position.getCurrent_position_latitude();
+        this.current_position_longitude = position.getCurrent_position_longitude();
+        this.operation_id = position.getOperation_id();
+        this.operation = position.getOperation();
+        this.operation_code = position.getOperation_code();
+        this.operation_asoup_code = position.getOperation_asoup_code();
+        this.operation_type = position.getOperation_type();
+        this.train_index = position.getTrain_index();
+        if (position.getTrain_number() != null)
+            this.train_number = position.getTrain_number();
+        if (position.getCont_train() != null)
+            this.cont_train = position.getCont_train();
+        this.tr_from_name = position.getTr_from().getName_ru();
+        if (position.getTr_from().getStation_code() != null)
+            this.tr_from_station_code = position.getTr_from().getStation_code();
+        if (position.getTr_from().getRoad_code() != null)
+            this.tr_from_road_code = position.getTr_from().getRoad_code();
+        if (position.getTr_from().getCountry_code() != null)
+            this.tr_from_country_code = position.getTr_from().getCountry_code();
+        if (position.getTr_from().getCountry_code_iso() != null)
+            this.tr_from_country_code_iso = position.getTr_from().getCountry_code_iso();
+        this.tr_to_name_ru = position.getTr_to().getName_ru();
+        if (position.getTr_to().getStation_code() != null)
+            this.tr_to_station_code = position.getTr_to().getStation_code();
+        if (position.getTr_to().getRoad_code() != null)
+            this.tr_to_road_code = position.getTr_to().getRoad_code();
+        if (position.getTr_to().getCountry_code() != null)
+            this.tr_to_country_code = position.getTr_to().getCountry_code();
+        if (position.getTr_to().getCountry_code_iso() != null)
+            this.tr_to_country_code_iso = position.getTr_to().getCountry_code_iso();
+        this.state = position.getState();
+        this.corrected_etsng = position.getCorrected_etsng().getName();
+        this.previous_etsng = position.getPrevious_etsng().getName();
+        if (position.getWeight() != null)
+            this.weight = position.getWeight();
+        this.loaded = position.getLoaded();
+        this.days_end = position.getDays_end();
+        if (position.getDistance_end() != null)
+            this.distance_end = position.getDistance_end();
+        if (position.getDistance_end_geo() != null)
+            this.distance_end_geo = position.getDistance_end_geo();
+        if (position.getFull_distance() != null)
+            this.full_distance = position.getFull_distance();
+        this.additional = position.getAdditional();
+        this.update_time = DateParser.parseFromStringToDate(position.getUpdate_time(), "dd.MM.yyyy, HH:mm:ss");
+        this.nomer_nakladnoi = position.getNomer_nakladnoi();
+        if (position.getGruz_receiver() != null)
+            this.gruz_sender = position.getGruz_sender();
+        if (position.getGruz_sender_okpo() != null)
+            this.gruz_sender_okpo = position.getGruz_sender_okpo();
+        this.gruz_sender_name = position.getGruz_sender_name();
+        if (position.getGruz_receiver() != null)
+            this.gruz_receiver = position.getGruz_receiver();
+        if (position.getGruz_receiver_okpo() != null)
+            this.gruz_receiver_okpo = position.getGruz_receiver_okpo();
+        this.gruz_receiver_name = position.getGruz_receiver_name();
+        this.broken = position.getBroken();
+        this.send_date_railway = DateParser.parseFromStringToDate(position.getSend_date_railway(), "dd.MM.yyyy, HH:mm");
+        if (position.getTrade_union_duration() != null)
+            this.trade_union_duration = position.getTrade_union_duration();
+        this.from_station_name = position.getFrom_station().getName_ru();
+        if (position.getFrom_station().getStation_code() != null)
+            this.from_station_station_code = position.getFrom_station().getStation_code();
+        if (position.getFrom_station().getRoad_code() != null)
+            this.from_station_road_code = position.getFrom_station().getRoad_code();
+        if (position.getFrom_station().getCountry_code() != null)
+            this.from_station_country_code = position.getFrom_station().getCountry_code();
+        if (position.getFrom_station().getCountry_code_iso() != null)
+            this.from_station_country_code_iso = position.getFrom_station().getCountry_code_iso();
+        this.to_station_name = position.getTo_station().getName_ru();
+        if (position.getTo_station().getStation_code() != null)
+            this.to_station_station_code = position.getTo_station().getStation_code();
+        if (position.getTo_station().getCountry_code() != null)
+            this.to_station_country_code = position.getTo_station().getCountry_code();
+        if (position.getTo_station().getCountry_code_iso() != null)
+            this.to_station_country_code_iso = position.getTo_station().getCountry_code_iso();
+        this.waybill_send_date = DateParser.parseFromStringToDate(position.getWaybill().getSend_date(), "dd.MM.yyyy, HH:mm:ss");
+    }
+
+    public Position(WagonCache wagonCacheId, Date current_position_date, long current_position_date_unix_timestamp, long utc_timestamp, Date utc_datetime, String current_position, long current_position_code, long current_position_road_code, long current_position_country_iso, double current_position_latitude, double current_position_longitude, long operation_id, String operation, String operation_code, long operation_asoup_code, String operation_type, String train_index, long train_number, long cont_train, String tr_from_name, long tr_from_station_code, long tr_from_road_code, long tr_from_country_code, long tr_from_country_code_iso, String tr_to_name_ru, long tr_to_station_code, long tr_to_road_code, long tr_to_country_code, long tr_to_country_code_iso, String state, String cargo_name, String corrected_etsng, String previous_etsng, long weight, String loaded, String days_end, long distance_end, long distance_end_geo, long full_distance, String additional, Date update_time, String nomer_nakladnoi, long gruz_sender, long gruz_sender_okpo, String gruz_sender_name, long gruz_receiver, long gruz_receiver_okpo, String gruz_receiver_name, String broken, Date send_date_railway, double trade_union_duration, String from_station_name, long from_station_station_code, long from_station_road_code, long from_station_country_code, long from_station_country_code_iso, String to_station_name, long to_station_station_code, long to_station_road_code, long to_station_country_code, long to_station_country_code_iso, Date waybill_send_date) {
         this.wagonCacheId = wagonCacheId;
         this.current_position_date = current_position_date;
         this.current_position_date_unix_timestamp = current_position_date_unix_timestamp;
@@ -193,16 +282,16 @@ public class Position {
         this.tr_from_country_code = tr_from_country_code;
         this.tr_from_country_code_iso = tr_from_country_code_iso;
         this.tr_to_name_ru = tr_to_name_ru;
-        this.tr_tostation_code = tr_tostation_code;
+        this.tr_to_station_code = tr_to_station_code;
         this.tr_to_road_code = tr_to_road_code;
         this.tr_to_country_code = tr_to_country_code;
         this.tr_to_country_code_iso = tr_to_country_code_iso;
         this.state = state;
-        this.country_code = country_code;
+        this.cargo_name = cargo_name;
+        this.corrected_etsng = corrected_etsng;
+        this.previous_etsng = previous_etsng;
         this.weight = weight;
         this.loaded = loaded;
-        this.corrected_etsng_name = corrected_etsng_name;
-        this.previos_etsng_name = previos_etsng_name;
         this.days_end = days_end;
         this.distance_end = distance_end;
         this.distance_end_geo = distance_end_geo;
@@ -222,15 +311,47 @@ public class Position {
         this.from_station_name = from_station_name;
         this.from_station_station_code = from_station_station_code;
         this.from_station_road_code = from_station_road_code;
-        this.road_code_country_code = road_code_country_code;
-        this.country_code_country_code_iso = country_code_country_code_iso;
+        this.from_station_country_code = from_station_country_code;
+        this.from_station_country_code_iso = from_station_country_code_iso;
         this.to_station_name = to_station_name;
         this.to_station_station_code = to_station_station_code;
+        this.to_station_road_code = to_station_road_code;
         this.to_station_country_code = to_station_country_code;
         this.to_station_country_code_iso = to_station_country_code_iso;
         this.waybill_send_date = waybill_send_date;
     }
 
+    public String getCargo_name() {
+        return cargo_name;
+    }
+
+    public void setCargo_name(String cargo_name) {
+        this.cargo_name = cargo_name;
+    }
+
+    public String getPrevious_etsng() {
+        return previous_etsng;
+    }
+
+    public void setPrevious_etsng(String previous_etsng) {
+        this.previous_etsng = previous_etsng;
+    }
+
+    public String getLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(String loaded) {
+        this.loaded = loaded;
+    }
+
+    public long getTo_station_road_code() {
+        return to_station_road_code;
+    }
+
+    public void setTo_station_road_code(long to_station_road_code) {
+        this.to_station_road_code = to_station_road_code;
+    }
 
     public long getId() {
         return id;
@@ -440,12 +561,12 @@ public class Position {
         this.tr_to_name_ru = tr_to_name_ru;
     }
 
-    public long getTr_tostation_code() {
-        return tr_tostation_code;
+    public long getTr_to_station_code() {
+        return tr_to_station_code;
     }
 
-    public void setTr_tostation_code(long tr_tostation_code) {
-        this.tr_tostation_code = tr_tostation_code;
+    public void setTr_to_station_code(long tr_tostation_code) {
+        this.tr_to_station_code = tr_tostation_code;
     }
 
     public long getTr_to_road_code() {
@@ -480,44 +601,20 @@ public class Position {
         this.state = state;
     }
 
-    public String getCountry_code() {
-        return country_code;
+    public String getCorrected_etsng() {
+        return corrected_etsng;
     }
 
-    public void setCountry_code(String country_code) {
-        this.country_code = country_code;
+    public void setCorrected_etsng(String country_code) {
+        this.corrected_etsng = country_code;
     }
 
     public double getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(long weight) {
         this.weight = weight;
-    }
-
-    public String getLoaded() {
-        return loaded;
-    }
-
-    public void setLoaded(String loaded) {
-        this.loaded = loaded;
-    }
-
-    public long getCorrected_etsng_name() {
-        return corrected_etsng_name;
-    }
-
-    public void setCorrected_etsng_name(long corrected_etsng_name) {
-        this.corrected_etsng_name = corrected_etsng_name;
-    }
-
-    public long getPrevios_etsng_name() {
-        return previos_etsng_name;
-    }
-
-    public void setPrevios_etsng_name(long previos_etsng_name) {
-        this.previos_etsng_name = previos_etsng_name;
     }
 
     public String getDays_end() {
@@ -672,20 +769,20 @@ public class Position {
         this.from_station_road_code = from_station_road_code;
     }
 
-    public long getRoad_code_country_code() {
-        return road_code_country_code;
+    public long getFrom_station_country_code() {
+        return from_station_country_code;
     }
 
-    public void setRoad_code_country_code(long road_code_country_code) {
-        this.road_code_country_code = road_code_country_code;
+    public void setFrom_station_country_code(long road_code_country_code) {
+        this.from_station_country_code = road_code_country_code;
     }
 
-    public long getCountry_code_country_code_iso() {
-        return country_code_country_code_iso;
+    public long getFrom_station_country_code_iso() {
+        return from_station_country_code_iso;
     }
 
-    public void setCountry_code_country_code_iso(long country_code_country_code_iso) {
-        this.country_code_country_code_iso = country_code_country_code_iso;
+    public void setFrom_station_country_code_iso(long country_code_country_code_iso) {
+        this.from_station_country_code_iso = country_code_country_code_iso;
     }
 
     public String getTo_station_name() {

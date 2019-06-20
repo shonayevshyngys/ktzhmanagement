@@ -86,38 +86,12 @@ public class WagonClient {
 
 
     public static void main(String[] args) {
-        new WagonClient();
-        getUserWagons(true).subscribe(new SingleObserver<ResponseBody>() {
-            @Override
-            public void onSubscribe(Disposable disposable) {
-
-            }
-
-            @Override
-            public void onSuccess(ResponseBody responseBody) {
-                try {
-                    Data data =
-                    WagonDeserealizator
-                            .getData(responseBody.string());
-                    data.getVagon().forEach(vagons -> {
-                        if (vagons != null) {
-                            System.out.println(vagons.getVagon_info().getClient_id());
-                        }
-
-                    });
-
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-        });
+        String url = URLbuilder.newBuilder()
+                .addRequestType("take_off_vagons")
+                .addClientIds("aman10170710967")
+                .set()
+                .build();
+        System.out.println(url);
     }
 
 }

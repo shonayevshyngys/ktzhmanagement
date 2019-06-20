@@ -28,11 +28,12 @@ public class WagonCacheDAO {
         return wagonCache;
     }
 
-    public static WagonCache getByWagonNo(long no) {
+    public static WagonCache getByWagonNo(Long no) {
         Session session = HibernateUtils.getSession();
+        String number = String.valueOf(no);
         Transaction transaction = session.beginTransaction();
-        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.vagon_no = :no")
-                .setParameter("no", no).getSingleResult();
+        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.vagon_no = :number")
+                .setParameter("number", number).getSingleResult();
         transaction.commit();
         session.close();
         return wagonCache;

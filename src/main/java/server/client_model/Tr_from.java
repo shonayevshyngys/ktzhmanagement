@@ -1,31 +1,29 @@
 package server.client_model;
 
 public class Tr_from {
-    private String country_code;
+    private Long country_code;
 
     private String name_ru;
 
     private String name_de;
 
-    private String station_code;
+    private Long station_code;
 
-    private String road_code;
+    private Long road_code;
 
     private String name_lv;
 
-    private String country_code_iso;
+    private Long country_code_iso;
 
     private String name_cn;
 
     private String name_en;
 
-    public String getCountry_code ()
-    {
+    public Long getCountry_code() {
         return country_code;
     }
 
-    public void setCountry_code (String country_code)
-    {
+    public void setCountry_code(Long country_code) {
         this.country_code = country_code;
     }
 
@@ -49,23 +47,19 @@ public class Tr_from {
         this.name_de = name_de;
     }
 
-    public String getStation_code ()
-    {
+    public Long getStation_code() {
         return station_code;
     }
 
-    public void setStation_code (String station_code)
-    {
+    public void setStation_code(Long station_code) {
         this.station_code = station_code;
     }
 
-    public String getRoad_code ()
-    {
+    public Long getRoad_code() {
         return road_code;
     }
 
-    public void setRoad_code (String road_code)
-    {
+    public void setRoad_code(Long road_code) {
         this.road_code = road_code;
     }
 
@@ -79,13 +73,12 @@ public class Tr_from {
         this.name_lv = name_lv;
     }
 
-    public String getCountry_code_iso ()
+    public Long getCountry_code_iso ()
     {
         return country_code_iso;
     }
 
-    public void setCountry_code_iso (String country_code_iso)
-    {
+    public void setCountry_code_iso(Long country_code_iso) {
         this.country_code_iso = country_code_iso;
     }
 

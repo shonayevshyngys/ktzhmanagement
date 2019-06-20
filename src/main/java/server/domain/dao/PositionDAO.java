@@ -69,6 +69,18 @@ public class PositionDAO {
         return positions;
     }
 
+    public static List<Position> getAllPositionsByWagonCacheId(long id) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        @SuppressWarnings({"duplicated", "unchecked"})
+        List<Position> positions = (List<Position>) session
+                .createQuery("FROM positions p where p.wagonCacheId.id = :id")
+                .setParameter("id", id).list();
+        transaction.commit();
+        session.close();
+        return positions;
+    }
+
     public static void deleteById(long id) {
         delete(getById(id));
     }
