@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity(name = "wagon_cache")
-public class WagonCache {
+public class  WagonCache {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

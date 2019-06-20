@@ -1,5 +1,6 @@
 package server.domain.dao;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
@@ -95,6 +96,8 @@ public class UserDAO {
         User user = (User) session
                 .createQuery("FROM Users u WHERE u.username = :username")
                 .setParameter("username", username).getSingleResult();
+
+        Hibernate.initialize(user.getUserWagons());
         transaction.commit();
         session.close();
         return user;

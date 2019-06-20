@@ -1,27 +1,8 @@
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
-import server.client.WagonClient;
-import server.client.WagonDeserealizator;
-import server.client_model.Data;
-import server.client_model.Vagon_info;
 import server.domain.HibernateUtils;
-import server.domain.dao.*;
-import server.domain.model.*;
-import server.web.Utils.DateParser;
-import server.web.Utils.HashUtils;
-
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-//        HibernateUtils.getSession().close();
+       //HibernateUtils.getSession().close();
         // WagonCache wagonCache = new WagonCache(new);
         //WagonCacheDAO.persist(wagonCache);
 //        UserDAO.persist(new User(new Date(), new Date(), "", "shyngys10", HashUtils.hashPassword("shyngys10"), "admin"));
@@ -74,7 +55,7 @@ public class Main {
 //
 //            }
 //        });
-        new WagonClient();
+      /*  new WagonClient();
         WagonClient.takeOff("aman10170710967").subscribe(new SingleObserver<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable disposable) {
@@ -91,6 +72,6 @@ public class Main {
                 throwable.printStackTrace();
             }
         });
-
+*/
     }
 }

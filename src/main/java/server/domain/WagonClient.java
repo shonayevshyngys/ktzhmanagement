@@ -1,4 +1,4 @@
-package server.client;
+package server.domain;
 
 
 import io.reactivex.Single;
@@ -8,6 +8,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import server.client.URLbuilder;
+import server.client.WagonAPI;
+import server.client.WagonDeserealizator;
 import server.client_model.Data;
 
 import javax.xml.bind.JAXBException;

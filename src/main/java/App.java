@@ -1,25 +1,27 @@
 import io.javalin.Handler;
 import io.javalin.Javalin;
-import server.client.WagonClient;
 import server.domain.HibernateUtils;
+import server.domain.WagonClient;
+import server.domain.dao.UserDAO;
+import server.domain.model.User;
 import server.web.Handlers.*;
 import server.web.JWT.JavalinJWT;
+import server.web.Utils.HashUtils;
 import server.web.Utils.Roles;
 import server.web.Utils.TokenHandler;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 import static io.javalin.apibuilder.ApiBuilder.crud;
 
 public class App {
     public static void main(String[] args) {
-        Javalin app  = Javalin.create()
+        Javalin app = Javalin.create()
                 .enableDebugLogging();  //for debug
 
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
-        app.start(1228);
+
+        checkUser(app);
 
         //init client
         WagonClient wc = new WagonClient();
@@ -36,7 +38,7 @@ public class App {
             crud("/wagon/:id", new WagonController(), new HashSet<>(Arrays.asList(Roles.USER)));
             app.post("/login", new LoginHandler(), Collections.singleton(Roles.ANYONE));
             app.patch("/update_all_user_wagons", new AllUserWagonsHandler(), Collections.singleton(Roles.USER));
-            app.get("/user_info",new UserInfoHandler(), Collections.singleton(Roles.USER) );
+            app.get("/user_info", new UserInfoHandler(), Collections.singleton(Roles.USER));
 
 
             //admin
@@ -45,4 +47,21 @@ public class App {
 
         });
     }
+
+    private static void checkUser(Javalin app) {
+        User admin = new User(new Date(),new Date(),"","admin", HashUtils.hashPassword("admin"),"admin");
+        List<User> users = UserDAO.getAllUsers();
+        if(users.isEmpty()){
+            UserDAO.persist(admin);
+            app.start(1228);
+        }
+        else if(UserDAO.getByUsername("admin").getRole().equals("admin")){
+            app.start(1228);
+        }
+        else {
+            UserDAO.persist(admin);
+            app.start(1228);
+        }
+    }
 }
+

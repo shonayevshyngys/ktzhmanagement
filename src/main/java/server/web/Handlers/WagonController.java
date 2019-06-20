@@ -6,10 +6,10 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
-import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.client_model.Vagon_info;
+import server.domain.WagonClient;
 import server.domain.dao.*;
 import server.domain.model.*;
 import server.web.Utils.UserData;
@@ -153,8 +153,6 @@ public class WagonController implements CrudHandler {
             context.status(200);
             context.json(uw);
 
-        } else if (uw == null) {
-            context.status(400);
         } else {
             context.status(200);
             context.json(new ErrorResponse("There is no list of the WagonCache"));
@@ -269,6 +267,44 @@ public class WagonController implements CrudHandler {
             }
         });
         //update wagon and write it into cache
+
+        WagonClient.getWagon(userData.getUsername() + param).subscribe(new SingleObserver<ResponseBody>() {
+            @Override
+            public void onSubscribe(Disposable disposable) {
+                System.out.println("subbed");
+            }
+
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+                try {
+                    UserWagon temp = UserWagonDAO.getByClientId(userData.getUsername() + param);
+                    UserWagonDAO.delete(temp);
+
+                    Data data = WagonDeserealizator.getData(responseBody.string());
+                    List<Position> positions = new ArrayList<>();
+                    List<Repair> repairs = new ArrayList<>();
+                    WagonCache wagonCache = new WagonCache(positions, new Date(), UserWagonDAO.getByClientId(
+                            userData.getUsername() + param), data.getVagon().get(0).getVagon_info(), repairs);
+
+                    for (int pos1 = 0; pos1 < data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().size(); pos1++) {
+                        repairs.add(new Repair(data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().get(pos1),wagonCache));
+                        RepairDAO.persist(repairs.get(pos1));
+                    }
+
+                    WagonCacheDAO.persist(wagonCache);
+                } catch (JAXBException | IOException e) {
+                    e.printStackTrace();
+                }
+
+                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(userData.getUsername() + param));
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
         //TODO implement update through delete + insert
     }
 
