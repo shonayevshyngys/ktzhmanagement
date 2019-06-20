@@ -11,6 +11,15 @@ public class Vagon {
     private List<Position> position;
 //    private String status;
     private String vagon_no;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Vagon() {}
 

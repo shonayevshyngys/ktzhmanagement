@@ -99,17 +99,22 @@ public class WagonController implements CrudHandler {
                     try {
                         if (getStatus(responseBody.string())) {
                             //TODO implement delete by client_id in userWagon and delete userWagon `Scorpion: Get over here' over there
-                            WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
-                            UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
-                            context.status(200);
-                            context.json(new SuccessMessage("Wagon successfully deleted"));
-                        } else {
-                            context.status(400);
-                            context.json(new ErrorResponse("Something went wrong"));
+                            if (!WagonDeserealizator.getData(responseBody.string()).getVagon().get(0).getStatus().equals("FALSE")) {
+                                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
+                                UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
+                                context.status(200);
+                                context.json(new SuccessMessage("Wagon successfully deleted"));
+                            } else {
+                                context.status(400);
+                                context.json(new ErrorResponse("Something went wrong"));
+                            }
                         }
+
                     } catch (IOException e) {
                         context.status(400);
                         context.json(new ErrorResponse("Something went wrong"));
+                        e.printStackTrace();
+                    } catch (JAXBException e) {
                         e.printStackTrace();
                     }
 
