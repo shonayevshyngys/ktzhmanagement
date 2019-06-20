@@ -85,8 +85,8 @@ public class UserWagonDAO {
         delete(getById(id));
     }
 
-    @Test
-    public void kek() {
+//    @Test
+//    public void kek() {
 //        UserDAO.persist(new User(new Date(), new Date(), "", "aman", "password", "user"));
 //        UserWagonDAO.persist(new UserWagon(UserDAO.getById(1), "araninho", WagonCacheDAO.getById(1)));
 //        UserWagonDAO.getByUserId(1).forEach(users -> System.out.println(users.getClientId()));
@@ -106,6 +106,6 @@ public class UserWagonDAO {
 //                564, 654, new Date(), "asd", 852, new Date(), new Date(),
 //                new Date(), new Date(), 564, new Date(), 564, new Date(), new Date(), repairs));
 //        WagonCacheDAO.getAllWagonCacheByUserId(1).forEach(wagons -> System.out.println(wagons.getClient_id()));
-        System.out.println(WagonCacheDAO.getByClientId("123").getFrom_code());
-    }
+//        System.out.println(WagonCacheDAO.getByClientId("123").getFrom_code());
+//    }
 }

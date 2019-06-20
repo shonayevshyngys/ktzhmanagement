@@ -10,10 +10,7 @@ import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.client_model.Vagon_info;
-import server.domain.dao.UserActionsDAO;
-import server.domain.dao.UserDAO;
-import server.domain.dao.UserWagonDAO;
-import server.domain.dao.WagonCacheDAO;
+import server.domain.dao.*;
 import server.domain.model.*;
 import server.web.Utils.UserData;
 import server.web.request_models.CreateWagon;
@@ -193,7 +190,7 @@ public class WagonController implements CrudHandler {
         return xml.contains("<status>OK</status>");
     }
 
-    private void setWagon(User u, CreateWagon cw, Context context){
+    private void setWagon(User u, CreateWagon cw, Context context) {
         WagonClient.viewWagons(true, u.getUsername() + cw.getNo_wagon()).subscribe(new SingleObserver<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable disposable) {
@@ -204,7 +201,7 @@ public class WagonController implements CrudHandler {
             public void onSuccess(ResponseBody responseBody) {
                 try {
                     UserActionsDAO.persist(new UserAction("get_wagon", new Date(), context.ip(), context.userAgent(), u));
-                    UserWagon userWagon =  UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
+                    UserWagon userWagon = UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
                     System.out.println("created transient userWagon");
                     Data data = WagonDeserealizator.getData(responseBody.string());
                     Vagon_info vagon_info = data.getVagon().get(0).getVagon_info();
@@ -212,16 +209,26 @@ public class WagonController implements CrudHandler {
                     List<Position> positions = new ArrayList<>();
                     List<Repair> repairs = new ArrayList<>();
                     System.out.println("Starting to write to cache");
-                    WagonCache cache = new  WagonCache(positions, userWagon,
-                            vagon_info, repairs);
-                    System.out.println("Created transient cache");
+                    WagonCache cache = new WagonCache(positions, new Date(), userWagon, vagon_info, repairs);
+                    WagonCacheDAO.persist(cache);
+
                     UserWagon uw = UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
                     uw.setWagonCacheId(cache);
                     UserWagonDAO.update(uw);
+                    WagonCache wc = WagonCacheDAO.getByUserWagonClientId(u.getUsername() + cw.getNo_wagon());
+                    //fix check up on success
+
+                    ///
+                    for (int pos1 = 0; pos1 < data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().size(); pos1++) {
+                        repairs.add(new Repair(data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().get(pos1), wc));
+                        RepairDAO.persist(repairs.get(pos1));
+                    }
+                    System.out.println("Created transient cache");
+                    wc.setRepairs(repairs);
+                    WagonCacheDAO.update(wc);
+
                     System.out.println("Successfully updated");
-                } catch (JAXBException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (JAXBException | IOException e) {
                     e.printStackTrace();
                 }
             }

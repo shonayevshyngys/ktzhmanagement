@@ -1,16 +1,16 @@
 package server.client_model;
 
 public class Repair_type {
-    private String code;
+    private long code;
 
     private String description;
 
-    public String getCode ()
+    public long getCode ()
     {
         return code;
     }
 
-    public void setCode (String code)
+    public void setCode (long code)
     {
         this.code = code;
     }

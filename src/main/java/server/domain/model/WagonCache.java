@@ -60,7 +60,8 @@ public class WagonCache {
     @Column
     private double to_longitude;
     @Column
-    private String send_date;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date send_date;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date send_date_time;
@@ -95,7 +96,7 @@ public class WagonCache {
     @Column
     private String vagon_comment;
     @Column
-    private String eta;
+    private Date eta;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date arrive_date_real;
@@ -184,9 +185,10 @@ public class WagonCache {
     @Temporal(TemporalType.TIMESTAMP)
     private Date vagon_spec_build_date;
 
-    public WagonCache(List<Position> positions, UserWagon userWagonId, Vagon_info vagonInfo, List<Repair> repairs) {
+    public WagonCache(List<Position> positions, Date lastUpdatedAt, UserWagon userWagonId, Vagon_info vagonInfo, List<Repair> repairs) {
         System.out.println("got in constructor");
         this.positions = positions;
+        this.lastUpdatedAt = lastUpdatedAt;
         this.userWagonId = userWagonId;
         this.vagon_no = vagonInfo.getVagon_no();
         this.client_id = vagonInfo.getClient_id();
@@ -202,33 +204,20 @@ public class WagonCache {
         this.to_code = vagonInfo.getTo_code();
         this.user_to_code = vagonInfo.getUser_to_code();
         this.to_road_code = vagonInfo.getTo_road_code();
-        this.to_road_name = vagonInfo.getTo_road().getRoad().getRoad_name();
+        this.to_road_name = vagonInfo.getTo_road().getRoad().getName().get(0);
         System.out.println("first 15");
         this.to_latitude = Double.valueOf(vagonInfo.getTo_latitude());
         this.to_longitude = Double.valueOf(vagonInfo.getTo_longitude());
-        this.send_date = vagonInfo.getSend_date();
-        this.send_date_time = DateParser.parseFromStringToDate(vagonInfo.getSend_date_time(), "dd:MM:yyyy, HH:mm");
+        this.send_date = DateParser.parseFromStringToDate(vagonInfo.getSend_date(), "dd.MM.yyyy");
+        this.send_date_time = DateParser.parseFromStringToDate(vagonInfo.getSend_date_time(), "dd.MM.yyyy, HH:mm");
         this.send_date_timestamp = Long.valueOf(vagonInfo.getSend_date_timestamp());
         System.out.println("first 20");
-        if (vagonInfo.getDeparture_timestamp().equals("")) {
-            this.departure_timestamp = 0;
-        } else {
+        if (!vagonInfo.getDeparture_timestamp().equals("") && vagonInfo.getDeparture_timestamp() != null)
             this.departure_timestamp = Long.valueOf(vagonInfo.getDeparture_timestamp());
-        }
-        System.out.println("21 sooqa");
-        this.departure_date_error = Long.valueOf(vagonInfo.getDeparture_date_error());
-        System.out.println("22 sooqa");
-        if (vagonInfo.getTime_added() == null) {
-            this.time_added = new Date();
-        } else {
-            this.time_added = DateParser.parseFromStringToDate(vagonInfo.getTime_added(), "dd.MM.yyyy, HH:mm:ss");
-        }
-        if (vagonInfo.getArrive_date() == null) {
-            this.arrive_date = new Date();
-        } else {
-            this.arrive_date = DateParser.parseFromStringToDate(vagonInfo.getArrive_date(), "dd.MM.yyyy, HH:mm");
-        }
 
+        this.departure_date_error = Long.valueOf(vagonInfo.getDeparture_date_error());
+        this.time_added = DateParser.parseFromStringToDate(vagonInfo.getTime_added(), "dd.MM.yyyy, HH:mm:ss");
+        this.arrive_date = DateParser.parseFromStringToDate(vagonInfo.getArrive_date(), "dd.MM.yyyy, HH:mm"); // often null
         this.processed = vagonInfo.getProcessed();
         System.out.println("first 25");
         this.groud_id = Long.valueOf(vagonInfo.getGroup_id());
@@ -240,66 +229,85 @@ public class WagonCache {
         this.days_wo_movement = Double.valueOf(vagonInfo.getDays_wo_movement());
         this.days_wo_operation = Double.valueOf(vagonInfo.getDays_wo_operation());
         this.vagon_comment = vagonInfo.getVagon_comment();
-        this.eta = vagonInfo.getEta();
-        this.arrive_date_real = DateParser.parseFromStringToDate(vagonInfo.getArrive_date_real(), "dd.MM.yyyy HH:mm");
+        this.eta = DateParser.parseFromStringToDate(vagonInfo.getEta(), "dd.MM.yyyy");
+        this.arrive_date_real = DateParser.parseFromStringToDate(vagonInfo.getArrive_date_real(), "dd.MM.yyyy, HH:mm");
         System.out.println("first 30");
-        if (vagonInfo.getArrive_date_real_timestamp().equals("")) {
-            this.arrive_date_real_timestamp = 0;
-        } else {
+        if (vagonInfo.getArrive_date_real_timestamp() != null && !vagonInfo.getArrive_date_real_timestamp().equals(""))
             this.arrive_date_real_timestamp = Long.valueOf(vagonInfo.getArrive_date_real_timestamp());
-        }
-        if (vagonInfo.getVagon_specifications().getVagon_no().equals("")) {
-            this.vagon_spec_no = 0;
-        } else {
+
+        if (vagonInfo.getVagon_specifications().getVagon_no() != null && vagonInfo.getVagon_specifications().getVagon_no().equals(""))
             this.vagon_spec_no = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_no());
-        }
-        this.vagon_spec_tare = Double.valueOf(vagonInfo.getVagon_specifications().getTare());
-        this.vagon_spec_capacity = Long.valueOf(vagonInfo.getVagon_specifications().getCapacity());
-        if (vagonInfo.getVagon_specifications().getVagon_type().equals("")) {
-            this.vagon_spec_type = 0;
-        } else {
+
+        if (vagonInfo.getVagon_specifications().getTare() != null && vagonInfo.getVagon_specifications().getTare().equals(""))
+            this.vagon_spec_tare = Double.valueOf(vagonInfo.getVagon_specifications().getTare());
+
+        if (vagonInfo.getVagon_specifications().getCapacity() != null && vagonInfo.getVagon_specifications().getCapacity().equals(""))
+            this.vagon_spec_capacity = Long.valueOf(vagonInfo.getVagon_specifications().getCapacity());
+
+        if (vagonInfo.getVagon_specifications().getVagon_type() != null && vagonInfo.getVagon_specifications().getVagon_type().equals(""))
             this.vagon_spec_type = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_type());
-        }
+
         System.out.println("first 35");
         this.vagon_spec_desc = vagonInfo.getVagon_specifications().getVagon_type_desc().getName().get(0);
-        this.vagon_spec_common_type_code = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_type_desc().getCommon_type().getId());
+        if (vagonInfo.getVagon_specifications().getVagon_type_desc().getCommon_type().getId() != null)
+            this.vagon_spec_common_type_code = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_type_desc().getCommon_type().getId());
+
         this.vagon_spec_common_type_name = vagonInfo.getVagon_specifications().getVagon_type_desc().getCommon_type().getName().get(0);
         this.vagon_spec_model = vagonInfo.getVagon_specifications().getModel();
-        this.vagon_spec_model_no = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getModel_no());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getModel_no() != null)
+            this.vagon_spec_model_no = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getModel_no());
+
         System.out.println("first 40");
         this.vagon_spec_model_cypher = vagonInfo.getVagon_specifications().getVagon_model().getModel_cypher();
-        this.vagon_spec_model_kind = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getMod_kind());
-        this.vagon_spec_model_charact = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getModel_charact());
-        this.vagon_spec_uch_specializ = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getUch_specializ());
-        this.vagon_spec_material_body = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getMaterial_body());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getMod_kind() != null)
+            this.vagon_spec_model_kind = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getMod_kind());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getModel_charact() != null)
+            this.vagon_spec_model_charact = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getModel_charact());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getUch_specializ() != null)
+            this.vagon_spec_uch_specializ = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getUch_specializ());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getMaterial_body() != null)
+            this.vagon_spec_material_body = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getMaterial_body());
         System.out.println("first 45");
-        this.vagon_spec_carriage_works = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getCarriage_works());
-        this.vagon_spec_carrying_capacity = Long.valueOf(vagonInfo.getVagon_specifications().getCapacity());
-        this.vagon_spec_tare_min = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getTare_min());
-        this.vagon_spec_tare_max = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getTare_max());
-        this.vagon_spec_autocoupl_len = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAutocoupl_len());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getCarriage_works() != null)
+            this.vagon_spec_carriage_works = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getCarriage_works());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getCarrying_capacity() != null)
+            this.vagon_spec_carrying_capacity = Long.valueOf(vagonInfo.getVagon_specifications().getCapacity());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getTare_min() != null)
+            this.vagon_spec_tare_min = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getTare_min());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getTare_max() != null)
+            this.vagon_spec_tare_max = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getTare_max());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getAutocoupl_len() != null)
+            this.vagon_spec_autocoupl_len = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAutocoupl_len());
         System.out.println("first 50");
-        this.vagon_spec_vagon_axis = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getVagon_axis());
-        this.vagon_spec_axial_load = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAxial_load());
-        this.vagon_spec_adapter_plate = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAdapter_plate());
-        this.vagon_spec_body_space = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getBody_space());
-        this.vagon_spec_delivery_year = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getDelivery_year());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getVagon_axis() != null)
+            this.vagon_spec_vagon_axis = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getVagon_axis());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getAxial_load() != null)
+            this.vagon_spec_axial_load = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAxial_load());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getAdapter_plate() != null)
+            this.vagon_spec_adapter_plate = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getAdapter_plate());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getBody_space() != null)
+            this.vagon_spec_body_space = Double.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getBody_space());
+        if (vagonInfo.getVagon_specifications().getVagon_model().getDelivery_year() != null)
+            this.vagon_spec_delivery_year = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getDelivery_year());
         System.out.println("first 55");
-        this.vagon_spec_obsolete_year = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getObsolete_year());
-        this.vagon_spec_registration_date = DateParser.parseFromStringToDate(
-                vagonInfo.getVagon_specifications().getRegistration_date(), "dd.MM.yyyy, HH:mm");
+        if (vagonInfo.getVagon_specifications().getVagon_model().getObsolete_year() != null)
+            this.vagon_spec_obsolete_year = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_model().getObsolete_year());
+        this.vagon_spec_registration_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getRegistration_date(), "dd.MM.yyyy");
         this.vagon_spec_registration_name = vagonInfo.getVagon_specifications().getRegistration_reason().getName().get(0);
-        this.vagon_spec_next_repair_type = Long.valueOf(vagonInfo.getVagon_specifications().getNext_repair_type());
-        this.vagon_spec_next_repair_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getNext_repair_date(), "dd.MM.yyyy HH:mm");
+        if (vagonInfo.getVagon_specifications().getNext_repair_type() != null)
+            this.vagon_spec_next_repair_type = Long.valueOf(vagonInfo.getVagon_specifications().getNext_repair_type());
+        this.vagon_spec_next_repair_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getNext_repair_date(), "dd.MM.yyyy");
         System.out.println("first 60");
-        this.vagon_spec_date_last_dep_repair = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getDate_last_dep_repair(), "dd.MM.yyyy HH:mm");
-        this.vagon_spec_date_last_kap_repair = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getDate_last_kap_repair(), "dd.MM.yyyy HH:mm");
-        this.vagon_spec_max_service_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMax_service_date(), "dd.MM.yyyy HH:mm");
-        this.vagon_spec_mileage_current = Long.valueOf(vagonInfo.getVagon_specifications().getMileage_current());
-        this.vagon_spec_mileage_current_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMileage_current_date(), "dd.MM.yyyy HH:mm");
-        this.vagon_spec_mileage_left = Long.valueOf(vagonInfo.getVagon_specifications().getMileage_left());
-        this.vagon_spec_mileage_left_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMileage_left_date(), "dd.MM.yyyy HH:mm");
-        this.vagon_spec_build_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getBuild_date(), "dd.MM.yyyy HH:mm");
+        this.vagon_spec_date_last_dep_repair = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getDate_last_dep_repair(), "dd.MM.yyyy");
+        this.vagon_spec_date_last_kap_repair = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getDate_last_kap_repair(), "dd.MM.yyyy"); // often null
+        this.vagon_spec_max_service_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMax_service_date(), "dd.MM.yyyy");
+        if (vagonInfo.getVagon_specifications().getMileage_current() != null)
+            this.vagon_spec_mileage_current = Long.valueOf(vagonInfo.getVagon_specifications().getMileage_current());
+        this.vagon_spec_mileage_current_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMileage_current_date(), "dd.MM.yyyy");
+        if (vagonInfo.getVagon_specifications().getMileage_left() != null)
+            this.vagon_spec_mileage_left = Long.valueOf(vagonInfo.getVagon_specifications().getMileage_left());
+        this.vagon_spec_mileage_left_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getMileage_left_date(), "dd.MM.yyyy");
+        this.vagon_spec_build_date = DateParser.parseFromStringToDate(vagonInfo.getVagon_specifications().getBuild_date(), "dd.MM.yyyy");
         this.repairs = repairs;
     }
 
@@ -308,7 +316,7 @@ public class WagonCache {
 
     }
 
-    public WagonCache(List<Position> positions, List<Repair> repairs, UserWagon userWagonId, Date lastUpdatedAt, String vagon_no, String client_id, String from_name, String from_code, String from_road_code, String from_road_name, double from_latitude, double from_longitude, String to_name, String to_code, String user_to_code, String to_road_code, String to_road_name, double to_latitude, double to_longitude, String send_date, Date send_date_time, long send_date_timestamp, long departure_timestamp, long departure_date_error, Date time_added, Date arrive_date, String processed, long groud_id, String group_name, String arrived, String round_vagon, long arrive_by_destination, double days_wo_movement, double days_wo_operation, String vagon_comment, String eta, Date arrive_date_real, long arrive_date_real_timestamp, long vagon_spec_no, double vagon_spec_tare, long vagon_spec_capacity, long vagon_spec_type, String vagon_spec_desc, long vagon_spec_common_type_code, String vagon_spec_common_type_name, String vagon_spec_model, long vagon_spec_model_no, String vagon_spec_model_cypher, long vagon_spec_model_kind, long vagon_spec_model_charact, long vagon_spec_uch_specializ, long vagon_spec_material_body, long vagon_spec_carriage_works, long vagon_spec_carrying_capacity, double vagon_spec_tare_min, double vagon_spec_tare_max, long vagon_spec_autocoupl_len, long vagon_spec_vagon_axis, double vagon_spec_axial_load, long vagon_spec_adapter_plate, double vagon_spec_body_space, long vagon_spec_delivery_year, long vagon_spec_obsolete_year, Date vagon_spec_registration_date, String vagon_spec_registration_name, long vagon_spec_next_repair_type, Date vagon_spec_next_repair_date, Date vagon_spec_date_last_dep_repair, Date vagon_spec_date_last_kap_repair, Date vagon_spec_max_service_date, long vagon_spec_mileage_current, Date vagon_spec_mileage_current_date, long vagon_spec_mileage_left, Date vagon_spec_mileage_left_date, Date vagon_spec_build_date) {
+    public WagonCache(List<Position> positions, List<Repair> repairs, UserWagon userWagonId, Date lastUpdatedAt, String vagon_no, String client_id, String from_name, String from_code, String from_road_code, String from_road_name, double from_latitude, double from_longitude, String to_name, String to_code, String user_to_code, String to_road_code, String to_road_name, double to_latitude, double to_longitude, Date send_date, Date send_date_time, long send_date_timestamp, long departure_timestamp, long departure_date_error, Date time_added, Date arrive_date, String processed, long groud_id, String group_name, String arrived, String round_vagon, long arrive_by_destination, double days_wo_movement, double days_wo_operation, String vagon_comment, Date eta, Date arrive_date_real, long arrive_date_real_timestamp, long vagon_spec_no, double vagon_spec_tare, long vagon_spec_capacity, long vagon_spec_type, String vagon_spec_desc, long vagon_spec_common_type_code, String vagon_spec_common_type_name, String vagon_spec_model, long vagon_spec_model_no, String vagon_spec_model_cypher, long vagon_spec_model_kind, long vagon_spec_model_charact, long vagon_spec_uch_specializ, long vagon_spec_material_body, long vagon_spec_carriage_works, long vagon_spec_carrying_capacity, double vagon_spec_tare_min, double vagon_spec_tare_max, long vagon_spec_autocoupl_len, long vagon_spec_vagon_axis, double vagon_spec_axial_load, long vagon_spec_adapter_plate, double vagon_spec_body_space, long vagon_spec_delivery_year, long vagon_spec_obsolete_year, Date vagon_spec_registration_date, String vagon_spec_registration_name, long vagon_spec_next_repair_type, Date vagon_spec_next_repair_date, Date vagon_spec_date_last_dep_repair, Date vagon_spec_date_last_kap_repair, Date vagon_spec_max_service_date, long vagon_spec_mileage_current, Date vagon_spec_mileage_current_date, long vagon_spec_mileage_left, Date vagon_spec_mileage_left_date, Date vagon_spec_build_date) {
         this.positions = positions;
         this.repairs = repairs;
         this.userWagonId = userWagonId;
@@ -546,11 +554,11 @@ public class WagonCache {
         this.to_longitude = to_longitude;
     }
 
-    public String getSend_date() {
+    public Date getSend_date() {
         return send_date;
     }
 
-    public void setSend_date(String send_date) {
+    public void setSend_date(Date send_date) {
         this.send_date = send_date;
     }
 
@@ -674,11 +682,11 @@ public class WagonCache {
         this.vagon_comment = vagon_comment;
     }
 
-    public String getEta() {
+    public Date getEta() {
         return eta;
     }
 
-    public void setEta(String eta) {
+    public void setEta(Date eta) {
         this.eta = eta;
     }
 

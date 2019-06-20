@@ -1,31 +1,29 @@
 package server.client_model;
 
 public class Station {
-    private String country_code;
+    private long country_code;
 
     private String name_ru;
 
     private String name_de;
 
-    private String station_code;
+    private long station_code;
 
-    private String road_code;
+    private long road_code;
 
     private String name_lv;
 
-    private String country_code_iso;
+    private long country_code_iso;
 
     private String name_cn;
 
     private String name_en;
 
-    public String getCountry_code ()
-    {
+    public long getCountry_code() {
         return country_code;
     }
 
-    public void setCountry_code (String country_code)
-    {
+    public void setCountry_code(long country_code) {
         this.country_code = country_code;
     }
 
@@ -49,43 +47,35 @@ public class Station {
         this.name_de = name_de;
     }
 
-    public String getStation_code ()
-    {
+    public long getStation_code() {
         return station_code;
     }
 
-    public void setStation_code (String station_code)
-    {
+    public void setStation_code(long station_code) {
         this.station_code = station_code;
     }
 
-    public String getRoad_code ()
-    {
+    public long getRoad_code() {
         return road_code;
     }
 
-    public void setRoad_code (String road_code)
-    {
+    public void setRoad_code(long road_code) {
         this.road_code = road_code;
     }
 
-    public String getName_lv ()
-    {
+    public String getName_lv() {
         return name_lv;
     }
 
-    public void setName_lv (String name_lv)
-    {
+    public void setName_lv(String name_lv) {
         this.name_lv = name_lv;
     }
 
-    public String getCountry_code_iso ()
-    {
+    public long getCountry_code_iso() {
         return country_code_iso;
     }
 
-    public void setCountry_code_iso (String country_code_iso)
-    {
+    public void setCountry_code_iso(long country_code_iso) {
         this.country_code_iso = country_code_iso;
     }
 

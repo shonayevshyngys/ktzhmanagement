@@ -1,17 +1,15 @@
 package server.client_model;
 
 public class Defect {
-    private String code;
+    private long code;
 
     private String description;
 
-    public String getCode ()
-    {
+    public Long getCode() {
         return code;
     }
 
-    public void setCode (String code)
-    {
+    public void setCode(long code) {
         this.code = code;
     }
 

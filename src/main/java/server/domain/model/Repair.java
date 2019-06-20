@@ -1,9 +1,9 @@
 package server.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import server.web.Utils.DateParser;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 
 @Entity(name = "Repairs")
@@ -88,13 +88,13 @@ public class Repair {
     private long repair_end_station_country_code_iso;
 
     @Column
-    private String repair_call_datetime;
+    private Date repair_call_datetime;
 
     @Column
-    private String repair_start_datetime;
+    private Date repair_start_datetime;
 
     @Column
-    private String repair_end_datetime;
+    private Date repair_end_datetime;
 
     @Column
     private long broken;
@@ -106,10 +106,7 @@ public class Repair {
     private long defect_code;
 
     @Column
-    private long defecr_desc;
-
-    @Column
-    private long upgrades;
+    private String defect_desc;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -119,6 +116,82 @@ public class Repair {
     public Repair() {
     }
 
+    public Repair(server.client_model.Repair repair, WagonCache wagonCacheId) {
+        this.last_repairs_vagon_no = repair.getVagon_no();
+        this.last_repairs_repair_code = repair.getRepair_type().getCode();
+        this.last_repairs_repair_desc = repair.getRepair_type().getDescription();
+        this.depot_start_code = repair.getDepot_start().getDepot().getCode();
+        this.depot_start_road_code = repair.getDepot_start().getDepot().getRoad_code();
+        this.depot_start_desc = repair.getDepot_start().getDepot().getDescription();
+        this.depot_start_desc_long = repair.getDepot_start().getDepot().getDescription_long();
+        this.depot_end_code = repair.getDepot_end().getDepot().getCode();
+        this.depot_end_road_code = repair.getDepot_end().getDepot().getRoad_code();
+        this.depot_end_desc = repair.getDepot_end().getDepot().getDescription();
+        this.depot_end_desc_long = repair.getDepot_end().getDepot().getDescription_long();
+        this.repair_call_road_code = repair.getRepair_call_road().getRoad().getRoad_code();
+        this.repair_call_road_name = repair.getRepair_call_road().getRoad().getRoad_name();
+        this.vu23_number = repair.getVu23_number();
+        this.vu36_number = repair.getVu36_number();
+        this.repair_station_name = repair.getRepair_station().getStation().getName_ru();
+        this.repair_station_code = repair.getRepair_station().getStation().getStation_code();
+        this.repair_station_road_code = repair.getRepair_station().getStation().getRoad_code();
+        this.repair_station_country_code = repair.getRepair_station().getStation().getCountry_code();
+        this.repair_station_country_code_iso = repair.getRepair_station().getStation().getCountry_code_iso();
+        this.repair_end_station_name = repair.getRepair_end_station().getStation().getName_ru();
+        this.repair_end_station_code = repair.getRepair_end_station().getStation().getStation_code();
+        this.repair_end_station_road_code = repair.getRepair_end_station().getStation().getRoad_code();
+        this.repair_end_station_country_code = repair.getRepair_end_station().getStation().getCountry_code();
+        this.repair_end_station_country_code_iso = repair.getRepair_end_station().getStation().getCountry_code_iso();
+        this.repair_call_datetime = DateParser.parseFromStringToDate(repair.getRepair_call_datetime(), "dd-MM-yyyy HH:mm:ss");
+        this.repair_start_datetime = DateParser.parseFromStringToDate(repair.getRepair_start_datetime(), "dd-MM-yyyy HH:mm:ss");
+        this.repair_end_datetime = DateParser.parseFromStringToDate(repair.getRepair_end_datetime(), "dd-MM-yyyy HH:mm:ss");
+        this.broken = repair.getBroken();
+        this.loaded = repair.getLoaded();
+        if (repair.getDefects().getDefect() != null) {
+            if (repair.getDefects().getDefect().getCode() != null)
+                this.defect_code = repair.getDefects().getDefect().getCode();
+            if (repair.getDefects().getDefect().getDescription() != null)
+                this.defect_desc = repair.getDefects().getDefect().getDescription();
+        }
+        this.wagonId = wagonCacheId;
+        System.out.println("One iteration of Repair constructor is ended");
+    }
+
+    public Repair(long last_repairs_vagon_no, long last_repairs_repair_code, String last_repairs_repair_desc, long depot_start_code, long depot_start_road_code, String depot_start_desc, String depot_start_desc_long, long depot_end_code, long depot_end_road_code, String depot_end_desc, String depot_end_desc_long, long repair_call_road_code, String repair_call_road_name, long vu23_number, long vu36_number, String repair_station_name, long repair_station_code, long repair_station_road_code, long repair_station_country_code, long repair_station_country_code_iso, String repair_end_station_name, long repair_end_station_code, long repair_end_station_road_code, long repair_end_station_country_code, long repair_end_station_country_code_iso, Date repair_call_datetime, Date repair_start_datetime, Date repair_end_datetime, long broken, long loaded, long defect_code, String defect_desc, WagonCache wagonId) {
+        this.last_repairs_vagon_no = last_repairs_vagon_no;
+        this.last_repairs_repair_code = last_repairs_repair_code;
+        this.last_repairs_repair_desc = last_repairs_repair_desc;
+        this.depot_start_code = depot_start_code;
+        this.depot_start_road_code = depot_start_road_code;
+        this.depot_start_desc = depot_start_desc;
+        this.depot_start_desc_long = depot_start_desc_long;
+        this.depot_end_code = depot_end_code;
+        this.depot_end_road_code = depot_end_road_code;
+        this.depot_end_desc = depot_end_desc;
+        this.depot_end_desc_long = depot_end_desc_long;
+        this.repair_call_road_code = repair_call_road_code;
+        this.repair_call_road_name = repair_call_road_name;
+        this.vu23_number = vu23_number;
+        this.vu36_number = vu36_number;
+        this.repair_station_name = repair_station_name;
+        this.repair_station_code = repair_station_code;
+        this.repair_station_road_code = repair_station_road_code;
+        this.repair_station_country_code = repair_station_country_code;
+        this.repair_station_country_code_iso = repair_station_country_code_iso;
+        this.repair_end_station_name = repair_end_station_name;
+        this.repair_end_station_code = repair_end_station_code;
+        this.repair_end_station_road_code = repair_end_station_road_code;
+        this.repair_end_station_country_code = repair_end_station_country_code;
+        this.repair_end_station_country_code_iso = repair_end_station_country_code_iso;
+        this.repair_call_datetime = repair_call_datetime;
+        this.repair_start_datetime = repair_start_datetime;
+        this.repair_end_datetime = repair_end_datetime;
+        this.broken = broken;
+        this.loaded = loaded;
+        this.defect_code = defect_code;
+        this.defect_desc = defect_desc;
+        this.wagonId = wagonId;
+    }
 
     public long getId() {
         return id;
@@ -328,27 +401,27 @@ public class Repair {
         this.repair_end_station_country_code_iso = repair_end_station_country_code_iso;
     }
 
-    public String getRepair_call_datetime() {
+    public Date getRepair_call_datetime() {
         return repair_call_datetime;
     }
 
-    public void setRepair_call_datetime(String repair_call_datetime) {
+    public void setRepair_call_datetime(Date repair_call_datetime) {
         this.repair_call_datetime = repair_call_datetime;
     }
 
-    public String getRepair_start_datetime() {
+    public Date getRepair_start_datetime() {
         return repair_start_datetime;
     }
 
-    public void setRepair_start_datetime(String repair_start_datetime) {
+    public void setRepair_start_datetime(Date repair_start_datetime) {
         this.repair_start_datetime = repair_start_datetime;
     }
 
-    public String getRepair_end_datetime() {
+    public Date getRepair_end_datetime() {
         return repair_end_datetime;
     }
 
-    public void setRepair_end_datetime(String repair_end_datetime) {
+    public void setRepair_end_datetime(Date repair_end_datetime) {
         this.repair_end_datetime = repair_end_datetime;
     }
 
@@ -376,16 +449,12 @@ public class Repair {
         this.defect_code = defect_code;
     }
 
-    public long getDefecr_desc() {
-        return defecr_desc;
+    public String getDefect_desc() {
+        return defect_desc;
     }
 
-    public void setDefecr_desc(long defecr_desc) {
-        this.defecr_desc = defecr_desc;
-    }
-
-    public long getUpgrades() {
-        return upgrades;
+    public void setDefect_desc(String defect_desc) {
+        this.defect_desc = defect_desc;
     }
 
     public WagonCache getWagonId() {
@@ -394,9 +463,5 @@ public class Repair {
 
     public void setWagonId(WagonCache wagonId) {
         this.wagonId = wagonId;
-    }
-
-    public void setUpgrades(long upgrades) {
-        this.upgrades = upgrades;
     }
 }

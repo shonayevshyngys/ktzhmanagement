@@ -48,6 +48,16 @@ public class WagonCacheDAO {
         return wagonCache;
     }
 
+    public static WagonCache getByUserWagonClientId(String clientId) {
+        Session session = HibernateUtils.getSession();
+        Transaction transaction = session.beginTransaction();
+        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.userWagonId.clientId = :clientId")
+                .setParameter("clientId", clientId).getSingleResult();
+        transaction.commit();
+        session.close();
+        return wagonCache;
+    }
+
     public static List<WagonCache> getAllWagonCacheByUserId(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();

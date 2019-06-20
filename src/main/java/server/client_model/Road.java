@@ -7,7 +7,7 @@ import java.util.List;
 public class Road {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private List<String> name;
-    private String road_code;
+    private long road_code;
     private String road_name;
 
     public String getRoad_name() {
@@ -26,11 +26,11 @@ public class Road {
         this.name = name;
     }
 
-    public String getRoad_code() {
+    public long getRoad_code() {
         return road_code;
     }
 
-    public void setRoad_code(String road_code) {
+    public void setRoad_code(long road_code) {
         this.road_code = road_code;
     }
 
