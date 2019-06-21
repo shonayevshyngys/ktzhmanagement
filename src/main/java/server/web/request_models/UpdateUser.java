@@ -1,8 +1,8 @@
 package server.web.request_models;
 
 public class UpdateUser {
-    String username;
-    String password;
+    private String username;
+    private String password;
 
     public UpdateUser(String username, String password) {
         this.username = username;

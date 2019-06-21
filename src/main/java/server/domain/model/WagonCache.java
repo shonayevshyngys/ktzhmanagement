@@ -210,10 +210,10 @@ public class WagonCache {
         this.to_longitude = Double.valueOf(vagonInfo.getTo_longitude());
         this.send_date = DateParser.parseFromStringToDate(vagonInfo.getSend_date(), "dd.MM.yyyy");
         this.send_date_time = DateParser.parseFromStringToDate(vagonInfo.getSend_date_time(), "dd.MM.yyyy, HH:mm");
-        this.send_date_timestamp = Long.valueOf(vagonInfo.getSend_date_timestamp());
+        this.send_date_timestamp = Long.valueOf(vagonInfo.getSend_date_timestamp()) * 1000;
         System.out.println("first 20");
         if (!vagonInfo.getDeparture_timestamp().equals("") && vagonInfo.getDeparture_timestamp() != null)
-            this.departure_timestamp = Long.valueOf(vagonInfo.getDeparture_timestamp());
+            this.departure_timestamp = Long.valueOf(vagonInfo.getDeparture_timestamp()) * 1000;
 
         this.departure_date_error = Long.valueOf(vagonInfo.getDeparture_date_error());
         this.time_added = DateParser.parseFromStringToDate(vagonInfo.getTime_added(), "dd.MM.yyyy, HH:mm:ss");
@@ -233,7 +233,7 @@ public class WagonCache {
         this.arrive_date_real = DateParser.parseFromStringToDate(vagonInfo.getArrive_date_real(), "dd.MM.yyyy, HH:mm");
         System.out.println("first 30");
         if (vagonInfo.getArrive_date_real_timestamp() != null && !vagonInfo.getArrive_date_real_timestamp().equals(""))
-            this.arrive_date_real_timestamp = Long.valueOf(vagonInfo.getArrive_date_real_timestamp());
+            this.arrive_date_real_timestamp = Long.valueOf(vagonInfo.getArrive_date_real_timestamp()) * 1000;
 
         if (vagonInfo.getVagon_specifications().getVagon_no() != null && vagonInfo.getVagon_specifications().getVagon_no().equals(""))
             this.vagon_spec_no = Long.valueOf(vagonInfo.getVagon_specifications().getVagon_no());

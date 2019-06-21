@@ -170,8 +170,8 @@ public class Position {
     public Position(WagonCache wagonCacheId, server.client_model.Position position) {
         this.wagonCacheId = wagonCacheId;
         this.current_position_date = DateParser.parseFromStringToDate(position.getCurrent_position_date(), "dd.MM.yyyy, HH:mm");
-        this.current_position_date_unix_timestamp = position.getCurrent_position_date_unix_timestamp();
-        this.utc_timestamp = position.getUtc_timestamp();
+        this.current_position_date_unix_timestamp = position.getCurrent_position_date_unix_timestamp() * 1000;
+        this.utc_timestamp = position.getUtc_timestamp() * 1000;
         this.utc_datetime = DateParser.parseFromStringToDate(position.getUtc_datetime(), "dd.MM.yyyy, HH:mm:ss");
         this.current_position = position.getCurrent_position();
         this.current_position_code = position.getCurrent_position_code();
