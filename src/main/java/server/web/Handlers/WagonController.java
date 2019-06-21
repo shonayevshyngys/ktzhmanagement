@@ -204,10 +204,6 @@ public class WagonController implements CrudHandler {
                     UserActionsDAO.persist(new UserAction("get_wagon", new Date(), context.ip(), context.userAgent(), u));
                     String clientId = u.getUsername() + s;
 
-                    WagonCache wc1 = WagonCacheDAO.getByWagonNo(Long.valueOf(s));
-                    RepairDAO.getAllRepairsByWagonCacheId(wc1.getId()).forEach(RepairDAO::delete);
-                    PositionDAO.getAllPositionsByWagonCacheId(wc1.getId()).forEach(PositionDAO::delete);
-                    WagonCacheDAO.update(wc1);
                     UserWagonDAO.delete(UserWagonDAO.getByClientId(clientId)); // Deleting UserWagon
                     WagonCacheDAO.delete(WagonCacheDAO.getByWagonNo(Long.valueOf(s))); // Deleting WagonCache
 
