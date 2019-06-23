@@ -17,7 +17,8 @@ import static io.javalin.apibuilder.ApiBuilder.crud;
 public class App {
     public static void main(String[] args) {
         Javalin app = Javalin.create()
-                .enableDebugLogging();  //for debug
+                .enableDebugLogging()
+                .enableCorsForAllOrigins();  //for debug
 
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
 

@@ -4,14 +4,14 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url">jdbc:postgresql://localhost:5432/carsviewer</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/test</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="connection.username">alterapp</property>
-        <property name="connection.password">poland1938</property>
+        <property name="connection.username">postgres</property>
+        <property name="connection.password">nikitaLOHped1k</property>
         <property name="connection.pool_size">10</property>
         <property name="hibernate.show_sql">true</property>
         <!-- DB schema will be updated if needed -->
-        <property name="hbm2ddl.auto">create-drop</property>
+<!--        <property name="hbm2ddl.auto">create-drop</property>-->
         <mapping class="server.domain.model.User"/>
         <mapping class="server.domain.model.Position"/>
         <mapping class="server.domain.model.UserAction"/>

@@ -71,6 +71,7 @@ public class UserWagonDAO {
     }
 
     public static UserWagon getByClientId(String clientId) {
+        System.out.println(clientId);
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
         UserWagon userWagon = (UserWagon)

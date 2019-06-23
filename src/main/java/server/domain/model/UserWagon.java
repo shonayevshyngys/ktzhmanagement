@@ -21,8 +21,8 @@ public class UserWagon {
     @Column(name = "client_id")
     private String clientId;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "wagon_cahce_id")
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "wagon_cache_id")
     private WagonCache wagonCacheId;
 
 

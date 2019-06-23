@@ -87,6 +87,8 @@ public class URLbuilder {
             for (int i = 0; i < s.length; i++) {
                 URLbuilder.this.clientId += s[i] + ";";
             }
+            String fix = URLbuilder.this.clientId.substring(0, clientId.length()-1);
+            URLbuilder.this.clientId = fix;
             return this;
         }
 

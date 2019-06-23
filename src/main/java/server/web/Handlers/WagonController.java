@@ -48,15 +48,14 @@ public class WagonController implements CrudHandler {
                             Data data = WagonDeserealizator.getData(responseBody.string());
                             String status = data.getResult().getStatus();
                             if (status.equals("OK")) {
-                                context.status(200);
-                                context.json(new SuccessMessage("Successfuly added wagon"));
                                 System.out.println("Successfully added wagon");
-
                                 UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u));
                                 System.out.println("Saved user action");
                                 UserWagonDAO.persist(new UserWagon(u, u.getUsername() + cw.getNo_wagon(), null));
                                 System.out.println("Created new UserWagon");
                                 setWagon(u, cw, context);
+                                context.status(200);
+                                context.json(new SuccessMessage("Successfuly added wagon"));
                             } else {
                                 context.status(400);
                                 context.json(data);
@@ -84,6 +83,7 @@ public class WagonController implements CrudHandler {
     public void delete(@NotNull Context context, @NotNull String param) {
         //delete
         UserData userData = new UserData(context);
+        System.out.println(param);
         User user = UserDAO.getByUsername(userData.getUsername());
 //        List<UserWagon> uw = UserWagonDAO.getByUserId(Long.valueOf(param));
         if (UserWagonDAO.getByClientId(user.getUsername() + param) != null) {
@@ -95,38 +95,11 @@ public class WagonController implements CrudHandler {
 
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
-
-                    try {
-                        if (getStatus(responseBody.string())) {
-                            //TODO implement delete by client_id in userWagon and delete userWagon `Scorpion: Get over here' over there
-                            if (!WagonDeserealizator.getData(responseBody.string()).getVagon().get(0).getStatus().equals("FALSE")) {
-                                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
-                                UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
-                                context.status(200);
-                                context.json(new SuccessMessage("Wagon successfully deleted"));
-                            } else {
-                                context.status(400);
-                                context.json(new ErrorResponse("Something went wrong"));
-                            }
-                        }
-
-                    } catch (IOException e) {
-                        context.status(400);
-                        context.json(new ErrorResponse("Something went wrong"));
-                        e.printStackTrace();
-                    } catch (JAXBException e) {
-                        e.printStackTrace();
-                    }
-
-//                if(WagonCacheDAO.getWagonCacheByWagonNo(param) != null){
-//                    WagonCacheDAO.delete(WagonCacheDAO.getWagonCacheByWagonNo(param));
-//                    context.status(200);
-//                }
-//                else {
-//                    context.status(400);
-//                    context.json(new ErrorResponse("There is not such wagon"));
-//
-//                }
+                    //TODO CHECH FOR ALL THINGS
+                    //WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
+                    UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
+                    context.status(200);
+                    context.json(new SuccessMessage("Wagon successfully deleted"));
                 }
 
                 @Override
@@ -136,6 +109,11 @@ public class WagonController implements CrudHandler {
                 }
             });
         }
+        else {
+            context.status(400);
+            context.json(new ErrorResponse("Nothing to delete"));
+        }
+
 
         //take off wagon
 

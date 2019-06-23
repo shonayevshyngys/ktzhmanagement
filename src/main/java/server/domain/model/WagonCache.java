@@ -20,9 +20,10 @@ public class  WagonCache {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "wagonId")
     private List<Repair> repairs;
 
+
+    //TODO read one-to-one reference IMPORTANT
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId", optional = false)
-    @JoinColumn(name = "user_wagon_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "wagonCacheId")
     private UserWagon userWagonId;
 
     @Column
