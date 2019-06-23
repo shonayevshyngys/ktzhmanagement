@@ -313,7 +313,10 @@ public class WagonController implements CrudHandler {
                     WagonCacheDAO.persist(cache);
 
                     UserWagon uw = UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
-                    uw.setWagonCacheId(cache);
+                    System.out.println("setted new cache id");
+                    WagonCache newCache = WagonCacheDAO.getByWagonNo(Long.valueOf(cw.getNo_wagon()));
+                    uw.setWagonCacheId(newCache);
+
                     UserWagonDAO.update(uw);
                     WagonCache wc = WagonCacheDAO.getByUserWagonClientId(u.getUsername() + cw.getNo_wagon());
                     //fix check up on success
