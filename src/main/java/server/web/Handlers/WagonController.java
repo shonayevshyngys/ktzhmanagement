@@ -6,10 +6,10 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
-import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.client_model.Vagon_info;
+import server.client.WagonClient;
 import server.domain.dao.*;
 import server.domain.model.*;
 import server.web.Utils.UserData;
@@ -48,15 +48,14 @@ public class WagonController implements CrudHandler {
                             Data data = WagonDeserealizator.getData(responseBody.string());
                             String status = data.getResult().getStatus();
                             if (status.equals("OK")) {
-                                context.status(200);
-                                context.json(new SuccessMessage("Successfuly added wagon"));
                                 System.out.println("Successfully added wagon");
-
                                 UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u));
                                 System.out.println("Saved user action");
                                 UserWagonDAO.persist(new UserWagon(u, u.getUsername() + cw.getNo_wagon(), null));
                                 System.out.println("Created new UserWagon");
                                 setWagon(u, cw, context);
+                                context.status(200);
+                                context.json(new SuccessMessage("Successfuly added wagon"));
                             } else {
                                 context.status(400);
                                 context.json(data);
@@ -84,6 +83,7 @@ public class WagonController implements CrudHandler {
     public void delete(@NotNull Context context, @NotNull String param) {
         //delete
         UserData userData = new UserData(context);
+        System.out.println(param);
         User user = UserDAO.getByUsername(userData.getUsername());
 //        List<UserWagon> uw = UserWagonDAO.getByUserId(Long.valueOf(param));
         if (UserWagonDAO.getByClientId(user.getUsername() + param) != null) {
@@ -95,38 +95,11 @@ public class WagonController implements CrudHandler {
 
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
-
-                    try {
-                        if (getStatus(responseBody.string())) {
-                            //TODO implement delete by client_id in userWagon and delete userWagon `Scorpion: Get over here' over there
-                            if (!WagonDeserealizator.getData(responseBody.string()).getVagon().get(0).getStatus().equals("FALSE")) {
-                                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
-                                UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
-                                context.status(200);
-                                context.json(new SuccessMessage("Wagon successfully deleted"));
-                            } else {
-                                context.status(400);
-                                context.json(new ErrorResponse("Something went wrong"));
-                            }
-                        }
-
-                    } catch (IOException e) {
-                        context.status(400);
-                        context.json(new ErrorResponse("Something went wrong"));
-                        e.printStackTrace();
-                    } catch (JAXBException e) {
-                        e.printStackTrace();
-                    }
-
-//                if(WagonCacheDAO.getWagonCacheByWagonNo(param) != null){
-//                    WagonCacheDAO.delete(WagonCacheDAO.getWagonCacheByWagonNo(param));
-//                    context.status(200);
-//                }
-//                else {
-//                    context.status(400);
-//                    context.json(new ErrorResponse("There is not such wagon"));
-//
-//                }
+                    //TODO CHECH FOR ALL THINGS
+                    //WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
+                    UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
+                    context.status(200);
+                    context.json(new SuccessMessage("Wagon successfully deleted"));
                 }
 
                 @Override
@@ -136,6 +109,11 @@ public class WagonController implements CrudHandler {
                 }
             });
         }
+        else {
+            context.status(400);
+            context.json(new ErrorResponse("Nothing to delete"));
+        }
+
 
         //take off wagon
 
@@ -153,8 +131,6 @@ public class WagonController implements CrudHandler {
             context.status(200);
             context.json(uw);
 
-        } else if (uw == null) {
-            context.status(400);
         } else {
             context.status(200);
             context.json(new ErrorResponse("There is no list of the WagonCache"));
@@ -265,6 +241,44 @@ public class WagonController implements CrudHandler {
             }
         });
         //update wagon and write it into cache
+
+        WagonClient.getWagon(userData.getUsername() + param).subscribe(new SingleObserver<ResponseBody>() {
+            @Override
+            public void onSubscribe(Disposable disposable) {
+                System.out.println("subbed");
+            }
+
+            @Override
+            public void onSuccess(ResponseBody responseBody) {
+                try {
+                    UserWagon temp = UserWagonDAO.getByClientId(userData.getUsername() + param);
+                    UserWagonDAO.delete(temp);
+
+                    Data data = WagonDeserealizator.getData(responseBody.string());
+                    List<Position> positions = new ArrayList<>();
+                    List<Repair> repairs = new ArrayList<>();
+                    WagonCache wagonCache = new WagonCache(positions, new Date(), UserWagonDAO.getByClientId(
+                            userData.getUsername() + param), data.getVagon().get(0).getVagon_info(), repairs);
+
+                    for (int pos1 = 0; pos1 < data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().size(); pos1++) {
+                        repairs.add(new Repair(data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().get(pos1),wagonCache));
+                        RepairDAO.persist(repairs.get(pos1));
+                    }
+
+                    WagonCacheDAO.persist(wagonCache);
+                } catch (JAXBException | IOException e) {
+                    e.printStackTrace();
+                }
+
+                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(userData.getUsername() + param));
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
         //TODO implement update through delete + insert
     }
 
@@ -295,7 +309,10 @@ public class WagonController implements CrudHandler {
                     WagonCacheDAO.persist(cache);
 
                     UserWagon uw = UserWagonDAO.getByClientId(u.getUsername() + cw.getNo_wagon());
-                    uw.setWagonCacheId(cache);
+                    System.out.println("setted new cache id");
+                    WagonCache newCache = WagonCacheDAO.getByWagonNo(Long.valueOf(cw.getNo_wagon()));
+                    uw.setWagonCacheId(newCache);
+
                     UserWagonDAO.update(uw);
                     WagonCache wc = WagonCacheDAO.getByUserWagonClientId(u.getUsername() + cw.getNo_wagon());
                     //fix check up on success

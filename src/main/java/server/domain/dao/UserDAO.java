@@ -1,5 +1,6 @@
 package server.domain.dao;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import server.domain.HibernateUtils;
@@ -39,19 +40,10 @@ public class UserDAO {
                                 .setParameter("id", id)
                                 .list();
 
-//        users.forEach(user -> {
-//            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
-//        });
-//        userWagons.forEach(userWagon -> {
-//        userWagon.getWagonCacheId()
-//                .setPositions(PositionDAO.getAllPositionsByUserWagonId(userWagon.getId()));
-//        userWagon.getWagonCacheId().setRepairs(RepairDAO.getAllRepairsByUserWagonId(userWagon.getId()));
-//        });
-        userWagons.forEach(userWagon -> {
-            System.out.println(userWagon.getWagonCacheId().getRepairs());
-            System.out.println(userWagon.getWagonCacheId().getClient_id());
-
-        });
+        userWagons.forEach(wagon ->{
+                    Hibernate.initialize(wagon.getWagonCacheId().getPositions());
+                    Hibernate.initialize(wagon.getWagonCacheId().getRepairs());
+                });
         transaction.commit();
         session.close();
         return userWagons;
@@ -95,6 +87,8 @@ public class UserDAO {
         User user = (User) session
                 .createQuery("FROM Users u WHERE u.username = :username")
                 .setParameter("username", username).getSingleResult();
+
+        Hibernate.initialize(user.getUserWagons());
         transaction.commit();
         session.close();
         return user;

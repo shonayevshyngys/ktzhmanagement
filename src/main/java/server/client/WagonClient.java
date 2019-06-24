@@ -8,6 +8,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import server.client.URLbuilder;
+import server.client.WagonAPI;
+import server.client.WagonDeserealizator;
 import server.client_model.Data;
 
 import javax.xml.bind.JAXBException;
@@ -85,13 +88,5 @@ public class WagonClient {
     }
 
 
-    public static void main(String[] args) {
-        String url = URLbuilder.newBuilder()
-                .addRequestType("take_off_vagons")
-                .addClientIds("aman10170710967")
-                .set()
-                .build();
-        System.out.println(url);
-    }
 
 }
