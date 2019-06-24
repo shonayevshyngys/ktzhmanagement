@@ -93,11 +93,20 @@ public class WagonController implements CrudHandler {
 
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
-                    //TODO CHECH FOR ALL THINGS
-                    //WagonCacheDAO.delete(WagonCacheDAO.getByClientId(user.getUsername() + param));
-                    UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
-                    context.status(200);
-                    context.json(new SuccessMessage("Wagon successfully deleted"));
+                    //TODO CHECHILL FOR ALL THINGS
+                    try {
+                        Data data = WagonDeserealizator.getData(responseBody.string());
+//                        if (data.getVagon().get(0).getStatus().equals("FALSE")) {
+                            context.status(200);
+                            context.json(data);
+//                        } else if (data.getVagon().get(0).getStatus().equals("OK")) {
+//                            UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
+//                            context.status(200);
+//                            context.json(data);
+//                        }
+                    } catch (JAXBException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
