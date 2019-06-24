@@ -6,10 +6,10 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import server.client.WagonClient;
 import server.client.WagonDeserealizator;
 import server.client_model.Data;
 import server.client_model.Vagon_info;
-import server.client.WagonClient;
 import server.domain.dao.*;
 import server.domain.model.*;
 import server.web.Utils.UserData;
@@ -55,16 +55,14 @@ public class WagonController implements CrudHandler {
                                 System.out.println("Created new UserWagon");
                                 setWagon(u, cw, context);
                                 context.status(200);
-                                context.json(new SuccessMessage("Successfuly added wagon"));
+                                context.json(new SuccessMessage("Successfully added wagon"));
                             } else {
                                 context.status(400);
                                 context.json(data);
 
                                 // check up if takes money to not add wagon
                             }
-                        } catch (JAXBException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
+                        } catch (JAXBException | IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -108,8 +106,7 @@ public class WagonController implements CrudHandler {
                     context.json(new ErrorResponse("Didnt connect to latyshi"));
                 }
             });
-        }
-        else {
+        } else {
             context.status(400);
             context.json(new ErrorResponse("Nothing to delete"));
         }
@@ -165,9 +162,7 @@ public class WagonController implements CrudHandler {
         //patch
 
         UserData userData = new UserData(context);
-        long param = Long.valueOf(s);
         User u = UserDAO.getById(Long.valueOf(userData.getId()));
-        UserWagonDAO.getByClientId(u.getUsername() + param);
         WagonClient.viewWagons(true, u.getUsername() + s).subscribe(new SingleObserver<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable disposable) {
@@ -179,9 +174,8 @@ public class WagonController implements CrudHandler {
                 try {
                     UserActionsDAO.persist(new UserAction("get_wagon", new Date(), context.ip(), context.userAgent(), u));
                     String clientId = u.getUsername() + s;
-
+//                    WagonCacheDAO.delete(WagonCacheDAO.getByClientId(clientId));
                     UserWagonDAO.delete(UserWagonDAO.getByClientId(clientId)); // Deleting UserWagon
-                    WagonCacheDAO.delete(WagonCacheDAO.getByWagonNo(Long.valueOf(s))); // Deleting WagonCache
 
                     UserWagonDAO.persist(new UserWagon(u, clientId, null)); // Creating UserWagon again
 
@@ -196,11 +190,11 @@ public class WagonController implements CrudHandler {
                         System.out.println("Starting to write to cache");
                         WagonCache cache = new WagonCache(positions, new Date(), userWagon, vagon_info, repairs);
                         WagonCacheDAO.persist(cache);
-
-                        UserWagon uw = UserWagonDAO.getByClientId(u.getUsername() + s);
-                        uw.setWagonCacheId(cache);
+                        WagonCache transientWagonCache = WagonCacheDAO.getByClientId(clientId);
+                        UserWagon uw = UserWagonDAO.getByClientId(clientId);
+                        uw.setWagonCacheId(transientWagonCache);
                         UserWagonDAO.update(uw);
-                        WagonCache wc = WagonCacheDAO.getByUserWagonClientId(u.getUsername() + s);
+                        WagonCache wc = WagonCacheDAO.getByClientId(clientId);
                         //fix check up on success
 
                         ///
@@ -242,43 +236,6 @@ public class WagonController implements CrudHandler {
         });
         //update wagon and write it into cache
 
-        WagonClient.getWagon(userData.getUsername() + param).subscribe(new SingleObserver<ResponseBody>() {
-            @Override
-            public void onSubscribe(Disposable disposable) {
-                System.out.println("subbed");
-            }
-
-            @Override
-            public void onSuccess(ResponseBody responseBody) {
-                try {
-                    UserWagon temp = UserWagonDAO.getByClientId(userData.getUsername() + param);
-                    UserWagonDAO.delete(temp);
-
-                    Data data = WagonDeserealizator.getData(responseBody.string());
-                    List<Position> positions = new ArrayList<>();
-                    List<Repair> repairs = new ArrayList<>();
-                    WagonCache wagonCache = new WagonCache(positions, new Date(), UserWagonDAO.getByClientId(
-                            userData.getUsername() + param), data.getVagon().get(0).getVagon_info(), repairs);
-
-                    for (int pos1 = 0; pos1 < data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().size(); pos1++) {
-                        repairs.add(new Repair(data.getVagon().get(0).getVagon_info().getLast_repairs().getRepair().get(pos1),wagonCache));
-                        RepairDAO.persist(repairs.get(pos1));
-                    }
-
-                    WagonCacheDAO.persist(wagonCache);
-                } catch (JAXBException | IOException e) {
-                    e.printStackTrace();
-                }
-
-                WagonCacheDAO.delete(WagonCacheDAO.getByClientId(userData.getUsername() + param));
-
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-
-            }
-        });
         //TODO implement update through delete + insert
     }
 
