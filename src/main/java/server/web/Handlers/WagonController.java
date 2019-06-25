@@ -93,17 +93,13 @@ public class WagonController implements CrudHandler {
 
                 @Override
                 public void onSuccess(ResponseBody responseBody) {
-                    //TODO CHECHILL FOR ALL THINGS
                     try {
                         Data data = WagonDeserealizator.getData(responseBody.string());
-//                        if (data.getVagon().get(0).getStatus().equals("FALSE")) {
-                            context.status(200);
-                            context.json(data);
-//                        } else if (data.getVagon().get(0).getStatus().equals("OK")) {
-//                            UserWagonDAO.delete(UserWagonDAO.getByClientId(user.getUsername() + param));
-//                            context.status(200);
-//                            context.json(data);
-//                        }
+                        UserWagon uw = UserWagonDAO.getByClientId(userData.getUsername()+param);
+                        UserWagonDAO.delete(uw);
+                        UserActionsDAO.persist(new UserAction("take_off_wagon", new Date(), context.ip(), context.userAgent(), user));
+                        context.status(200);
+                        context.json(data);
                     } catch (JAXBException | IOException e) {
                         e.printStackTrace();
                     }
@@ -226,10 +222,10 @@ public class WagonController implements CrudHandler {
 
                         System.out.println("Successfully updated");
                         context.status(200);
-                        context.result("Successfully updated");
+                        context.json(new SuccessMessage("Successfully updated"));
                     } else {
                         context.status(400);
-                        context.result("Something went wrong");
+                        context.json(new ErrorResponse("Something went wrong"));
                     }
 
                 } catch (IOException | JAXBException e) {

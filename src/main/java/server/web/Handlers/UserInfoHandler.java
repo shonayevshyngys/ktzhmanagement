@@ -34,6 +34,11 @@ public class UserInfoHandler implements Handler {
         info.setNumberOfAddedWagons(numberOfAddedWagons);
         info.setNumberOfWagonsNow(u.getUserWagons().size());
 
+        numberOfLoggins = 0;
+        numberOfTakeOffs = 0;
+        numberOfUpdateCalls = 0;
+        numberOfAddedWagons = 0;
+
         context.status(200);
         context.json(info);
     }
