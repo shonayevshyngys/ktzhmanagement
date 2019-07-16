@@ -214,6 +214,12 @@ public class WagonController implements CrudHandler {
                                     RepairDAO.persist(repairs.get(pos1));
                                 }
 
+                            if (data.getVagon().get(0).getPosition() != null)
+                                for (int pos = 0; pos < data.getVagon().get(0).getPosition().size(); pos++) {
+                                    positions.add(new Position(wc, data.getVagon().get(0).getPosition().get(pos)));
+                                    PositionDAO.persist(positions.get(pos));
+                                }
+
                             System.out.println("Created transient cache");
                             wc.setRepairs(repairs);
                             wc.setPositions(positions);
