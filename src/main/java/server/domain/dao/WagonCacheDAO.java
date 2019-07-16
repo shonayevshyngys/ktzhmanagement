@@ -6,8 +6,10 @@ import server.domain.HibernateUtils;
 import server.domain.model.Position;
 import server.domain.model.WagonCache;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import java.util.List;
-
+@SuppressWarnings("unchecked")
 public class WagonCacheDAO {
 
     public static void persist(WagonCache wagonCache) {
@@ -32,8 +34,14 @@ public class WagonCacheDAO {
         Session session = HibernateUtils.getSession();
         String number = String.valueOf(no);
         Transaction transaction = session.beginTransaction();
-        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.vagon_no = :number")
-                .setParameter("number", number).getSingleResult();
+        WagonCache wagonCache = null;
+        try {
+            wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.vagon_no = :number")
+                    .setParameter("number", number).getSingleResult();
+        } catch (PersistenceException e) {
+            System.err.print("No wagonCache found by ");
+            System.out.println("WAGON_NUMBER");
+        }
         transaction.commit();
         session.close();
         return wagonCache;
@@ -42,18 +50,13 @@ public class WagonCacheDAO {
     public static WagonCache getByClientId(String clientId) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.client_id = :clientId")
-                .setParameter("clientId", clientId).getSingleResult();
-        transaction.commit();
-        session.close();
-        return wagonCache;
-    }
-
-    public static WagonCache getByUserWagonClientId(String clientId) {
-        Session session = HibernateUtils.getSession();
-        Transaction transaction = session.beginTransaction();
-        WagonCache wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.userWagonId.clientId = :clientId")
-                .setParameter("clientId", clientId).getSingleResult();
+        WagonCache wagonCache = null; try{
+            wagonCache = (WagonCache) session.createQuery("FROM wagon_cache wc WHERE wc.client_id = :clientId")
+                    .setParameter("clientId", clientId).getSingleResult();
+        } catch (PersistenceException e) {
+            System.err.print("No wagonCaches found by ");
+            System.out.println("CLIENT_ID");
+        }
         transaction.commit();
         session.close();
         return wagonCache;

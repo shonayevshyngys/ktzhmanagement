@@ -3,14 +3,16 @@ package server.domain.dao;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.exception.SQLGrammarException;
 import server.domain.HibernateUtils;
 import server.domain.model.User;
 import server.domain.model.UserWagon;
 import server.domain.model.WagonCache;
-import server.web.response_models.UserResponse;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class UserDAO {
     public static void persist(User user) {
         Session session = HibernateUtils.getSession();
@@ -23,7 +25,13 @@ public class UserDAO {
     public static User getById(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        User user = (User) session.createQuery("FROM Users u WHERE u.id = :id").setParameter("id", id).getSingleResult();
+        User user = null;
+        try {
+            user = (User) session.createQuery("FROM Users u WHERE u.id = :id").setParameter("id", id).getSingleResult();
+        } catch (NoResultException nre) {
+            System.err.print("No user found by ");
+            System.out.println("USER_ID");
+        }
         transaction.commit();
         session.close();
         return user;
@@ -33,17 +41,22 @@ public class UserDAO {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
 
-        @SuppressWarnings({"unchecked", "duplicate"})
-        List<UserWagon> userWagons =
-                (List<UserWagon>)
-                        session.createQuery("From user_wagons uw WHERE uw.user.id = :id")
-                                .setParameter("id", id)
-                                .list();
-
-        userWagons.forEach(wagon ->{
-                    Hibernate.initialize(wagon.getWagonCacheId().getPositions());
-                    Hibernate.initialize(wagon.getWagonCacheId().getRepairs());
-                });
+        List<UserWagon> userWagons = null;
+        try {
+            userWagons = (List<UserWagon>)
+                    session.createQuery("From user_wagons uw WHERE uw.user.id = :id")
+                            .setParameter("id", id)
+                            .list();
+            userWagons.forEach(wagon -> {
+                Hibernate.initialize(wagon.getWagonCacheId().getPositions());
+                Hibernate.initialize(wagon.getWagonCacheId().getRepairs());
+            });
+        } catch (NoResultException | NullPointerException e) {
+            System.err.print("No userWagons found by ");
+            System.out.println("USER_ID");
+        } catch (SQLGrammarException sge) {
+            System.out.println("UserDAO - getAllUserWagonByUserId: Query error");
+        }
         transaction.commit();
         session.close();
         return userWagons;
@@ -52,13 +65,16 @@ public class UserDAO {
     public static List<WagonCache> getAllWagonCacheByUserId(long id) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        @SuppressWarnings({"unchecked", "duplicated"})
-        List<WagonCache> wagonCaches =
-                (List<WagonCache>)
-                        session.createQuery("From wagon_cache wc WHERE wc.userWagonId.id = :id")
-                                .setParameter("id", id)
-                                .list();
-
+        List<WagonCache> wagonCaches = null;
+        try {
+            wagonCaches = (List<WagonCache>)
+                    session.createQuery("From wagon_cache wc WHERE wc.userWagonId.id = :id")
+                            .setParameter("id", id)
+                            .list();
+        } catch (NoResultException nre) {
+            System.err.print("No wagonCaches found by ");
+            System.out.println("USER_ID");
+        }
 //        users.forEach(user -> {
 //            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
 //        });
@@ -70,8 +86,14 @@ public class UserDAO {
     public static List<User> getAllUsers() {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        @SuppressWarnings("unchecked")
-        List<User> users = (List<User>) session.createQuery("From Users").list();
+        List<User> users = null;
+        try {
+            users = (List<User>) session.createQuery("FROM Users").list();
+        } catch (NoResultException nre) {
+            System.err.print("No ");
+            System.out.print("USERS ");
+            System.err.println("found");
+        }
 
 //        users.forEach(user -> {
 //            user.getUserActionList().forEach(ual -> System.out.println(ual.getAction()));
@@ -84,46 +106,71 @@ public class UserDAO {
     public static User getByUsername(String username) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        User user = (User) session
-                .createQuery("FROM Users u WHERE u.username = :username")
-                .setParameter("username", username).getSingleResult();
-
-        Hibernate.initialize(user.getUserWagons());
-        transaction.commit();
+        User user = null;
+        try {
+            user = (User) session
+                    .createQuery("FROM Users u WHERE u.username = :username")
+                    .setParameter("username", username).getSingleResult();
+            Hibernate.initialize(user.getUserWagons());
+            transaction.commit();
+        } catch (NoResultException e) {
+            System.err.print("No user found by ");
+            System.out.println("USERNAME");
+        } catch (SQLGrammarException e) {
+            System.err.println("UserDAO - getByUsername: Query error");
+        }
         session.close();
         return user;
     }
 
-    public static void update(User user) {
+    public static boolean update(User user) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.update(user);
+        try {
+            session.update(user);
+        } catch (IllegalArgumentException iae) {
+            System.err.println("Can not update ");
+            System.out.println("USER");
+            session.close();
+            return false;
+        }
+
         transaction.commit();
         session.close();
+        return true;
     }
 
-    public static void updateById(long id) {
-        update(getById(id));
+    public static boolean updateById(long id) {
+        return update(getById(id));
     }
 
-    public static void updateByUsername(String username) {
-        update(getByUsername(username));
+    public static boolean updateByUsername(String username) {
+        return update(getByUsername(username));
     }
 
-    public static void delete(User user) {
+    public static boolean delete(User user) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = session.beginTransaction();
-        session.delete(user);
+        try {
+            session.delete(user);
+        } catch (IllegalArgumentException iae) {
+            System.err.print("Can not delete the ");
+            System.out.println("USER");
+            session.close();
+            return false;
+        }
+
         transaction.commit();
         session.close();
+        return true;
     }
 
-    public static void deleteById(long id) {
-        delete(getById(id));
+    public static boolean deleteById(long id) {
+        return delete(getById(id));
     }
 
-    public static void deleteByUsername(String username) {
-        delete(getByUsername(username));
+    public static boolean deleteByUsername(String username) {
+        return delete(getByUsername(username));
     }
 
 }
