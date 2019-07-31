@@ -35,45 +35,55 @@ public class WagonController implements CrudHandler {
         User u = UserDAO.getByUsername(userData.getUsername());
         String client_id = u.getUsername() + cw.getNo_wagon(); //creating client_id
         System.out.println("Creating new client wagon" + " " + client_id);
-        WagonClient.addWagon(cw.getNo_wagon(), cw.getFrom(), cw.getTo(), cw.getSend_day(), true, client_id, cw.getTakeoff_day())
-                .subscribe(new SingleObserver<ResponseBody>() {
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-                        System.out.println("getting data from server");
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        try {
-                            Data data = WagonDeserealizator.getData(responseBody.string());
-                            String status = data.getResult().getStatus();
-                            if (status.equals("OK")) {
-                                System.out.println("Successfully added wagon");
-                                UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u));
-                                System.out.println("Saved user action");
-                                UserWagonDAO.persist(new UserWagon(u, u.getUsername() + cw.getNo_wagon(), null));
-                                System.out.println("Created new UserWagon");
-                                setWagon(u, cw, context);
-                                context.status(200);
-                                context.json(new SuccessMessage("Successfully added wagon"));
-                            } else {
-                                context.status(400);
-                                context.json(data);
-
-                                // check up if takes money to not add wagon
-                            }
-                        } catch (JAXBException | IOException e) {
-                            e.printStackTrace();
+        if (cw.getFrom().length() == 5) {
+            cw.setFrom(String.valueOf(StationDAO.getFiveToSixStation(Long.valueOf(cw.getFrom())).getNumber()));
+        }
+        if (cw.getTo().length() == 5) {
+            cw.setTo(String.valueOf(StationDAO.getFiveToSixStation(Long.valueOf(cw.getTo())).getNumber()));
+        }
+        if (cw.getTo().length() == 6 && cw.getFrom().length() == 6)
+            WagonClient.addWagon(cw.getNo_wagon(), cw.getFrom(), cw.getTo(), cw.getSend_day(), true, client_id, cw.getTakeoff_day())
+                    .subscribe(new SingleObserver<ResponseBody>() {
+                        @Override
+                        public void onSubscribe(Disposable disposable) {
+                            System.out.println("getting data from server");
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        context.status(400);
-                        context.json(new ErrorResponse("Didnt connect to latyshi"));
-                    }
-                });
+                        @Override
+                        public void onSuccess(ResponseBody responseBody) {
+                            try {
+                                Data data = WagonDeserealizator.getData(responseBody.string());
+                                String status = data.getResult().getStatus();
+                                if (status.equals("OK")) {
+                                    System.out.println("Successfully added wagon");
+                                    UserActionsDAO.persist(new UserAction("add_wagon", new Date(), context.ip(), context.userAgent(), u));
+                                    System.out.println("Saved user action");
+                                    UserWagonDAO.persist(new UserWagon(u, u.getUsername() + cw.getNo_wagon(), null));
+                                    System.out.println("Created new UserWagon");
+                                    setWagon(u, cw, context);
+                                    context.status(200);
+                                    context.json(new SuccessMessage("Successfully added wagon"));
+                                } else {
+                                    context.status(400);
+                                    context.json(data);
 
+                                    // check up if takes money to not add wagon
+                                }
+                            } catch (JAXBException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            context.status(400);
+                            context.json(new ErrorResponse("Didnt connect to latyshi"));
+                        }
+                    });
+        else {
+            context.status(400);
+            context.json(new ErrorResponse("Station's length must be 5 or 6"));
+        }
         //add wagon
     }
 

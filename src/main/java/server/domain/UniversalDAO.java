@@ -53,4 +53,6 @@ public class UniversalDAO {
     public static void updateById(long id, Class<?> clazz) {
         update(getById(id, clazz));
     }
+
+
 }

@@ -18,5 +18,6 @@
         <mapping class="server.domain.model.UserWagon"/>
         <mapping class="server.domain.model.WagonCache"/>
         <mapping class="server.domain.model.Repair"/>
+        <mapping class="server.domain.model.Station"/>
     </session-factory>
 </hibernate-configuration>

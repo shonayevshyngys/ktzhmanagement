@@ -2,7 +2,9 @@ import io.javalin.Handler;
 import io.javalin.Javalin;
 import server.domain.HibernateUtils;
 import server.client.WagonClient;
+import server.domain.dao.StationDAO;
 import server.domain.dao.UserDAO;
+import server.domain.model.Station;
 import server.domain.model.User;
 import server.web.Handlers.*;
 import server.web.JWT.JavalinJWT;
@@ -22,7 +24,7 @@ public class App {
 
         app.accessManager(TokenHandler.jhandler.getAccessManager()); //init access manager
 
-        checkUser(app);
+        checkDB(app);
 
         //init client
         WagonClient wc = new WagonClient();
@@ -49,9 +51,13 @@ public class App {
         });
     }
 
-    private static void checkUser(Javalin app) {
+    private static void checkDB(Javalin app) {
         User admin = new User(new Date(),new Date(),"","admin", HashUtils.hashPassword("admin"),"admin");
         List<User> users = UserDAO.getAllUsers();
+        List<Station> stations = StationDAO.getAllStations();
+        if (stations.isEmpty()) {
+            StationDAO.initStations();
+        }
         if(users.isEmpty()){
             UserDAO.persist(admin);
             app.start(1228);
